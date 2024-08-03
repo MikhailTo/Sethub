@@ -1,3 +1,215 @@
-h1 {
-    color: green;
+:root {
+    --color-background: #ffffff;
+    --color-text: #24292f;
+    --color-primary: #0366d6;
+    --color-secondary: #6a737d;
+    --color-border: #d0d7de;
+    --color-header-bg: #24292f;
+    --color-header-text: #ffffff;
+    --color-footer-bg: #f6f8fa;
+    --color-list-meta: #57606a;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+
+    background-color: var(--color-background);
+    color: var(--color-text);
+
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+    line-height: 1.5; 
+}
+
+header {
+    background-color: var(--color-header-bg);
+    color: var(--color-header-text);
+
+    padding: 16px;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo {
+    
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav a {
+    color: var(--color-header-text);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: var(--color-primary);
+}
+
+nav a:active {
+    color: var(--color-secondary);
+}
+
+main {
+    flex: 1 0 auto;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.list-container {
+    margin-top: 20px;
+}
+
+.list-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+}
+
+.list-content.active {
+    max-height: 1000px; /* Это значение должно быть больше, чем максимальная высота контента */
+}
+
+.list-item {
+    position: relative;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.list-title {
+    text-decoration: none;
+    color: var(--color-text);
+    transition: color 0.3s;
+}
+
+.list-title:hover {
+    color: var(--color-primary);
+}
+
+.list-title h2 {
+    margin: 0;
+}
+
+.list-icons {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 4px;
+    padding-left: 2px;
+    color: var(--color-secondary);
+    transition: color 0.3s;
+}
+
+.icon-button:hover {
+    color: var(--color-primary);
+}
+
+.list-item h2 {
+    margin-top: 0;
+    transition: color 0.3s;
+}
+
+.list-item:hover h2 {
+    color: var(--color-primary);
+}
+
+.list-item:active h2 {
+    color: var(--color-secondary);
+}
+
+.list-meta {
+    font-size: 12px;
+    color: var(--color-list-meta);
+}
+
+
+footer {
+    flex-shrink: 0;
+    text-align: center;
+    padding: 16px;
+    background-color: var(--color-footer-bg);
+    border-top: 1px solid var(--color-border);
+}
+
+.menu-icon {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.toggle-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--color-secondary);
+    transition: transform 0.3s;
+}
+
+.toggle-button.active {
+    transform: rotate(180deg);
+}
+
+@media screen and (max-width: 768px) {
+    .menu-icon {
+        display: block;
+    }
+
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background-color: var(--color-header-bg);
+        padding: 20px 0;
+    }
+
+    .nav-menu.active {
+        display: flex;
+    }
+
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    nav ul li {
+        margin: 10px 0;
+    }
 }
