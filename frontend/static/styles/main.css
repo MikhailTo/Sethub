@@ -152,21 +152,21 @@ main {
     padding: 20px;
 }
 
-.list-container {
+.post-container {
     margin-top: 20px;
 }
 
-.list-content {
+.post-content {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.5s ease;
 }
 
-.list-content.active {
+.post-content.active {
     max-height: 1000px; /* Это значение должно быть больше, чем максимальная высота контента */
 }
 
-.list-item {
+.post-item {
     position: relative;
     border: 1px solid var(--color-border);
     border-radius: 6px;
@@ -174,21 +174,21 @@ main {
     margin-bottom: 16px;
 }
 
-.list-title {
+.post-title {
     text-decoration: none;
     color: var(--color-text);
     transition: color 0.3s;
 }
 
-.list-title:hover {
+.post-title:hover {
     color: var(--color-primary);
 }
 
-.list-title h2 {
+.post-title h2 {
     margin: 0;
 }
 
-.list-icons {
+.post-icons {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -209,25 +209,25 @@ main {
     color: var(--color-primary);
 }
 
-.list-item h2 {
+.post-item h2 {
     margin-top: 0;
     transition: color 0.3s;
 }
 
-.list-item:hover h2 {
+.post-item:hover h2 {
     color: var(--color-primary);
 }
 
-.list-item:active h2 {
+.post-item:active h2 {
     color: var(--color-secondary);
 }
 
-.list-meta {
+.post-meta {
     font-size: 12px;
     color: var(--color-list-meta);
 }
 
-.list-item-clickable {
+.post-item-clickable {
     background-color: var(--color-footer-bg);
     padding: 15px;
     border-radius: 4px;
@@ -236,7 +236,7 @@ main {
     position: relative;
 }
 
-.list-item-clickable:hover {
+.post-item-clickable:hover {
     background-color: var(--color-border);
 }
 

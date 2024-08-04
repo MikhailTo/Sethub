@@ -5,43 +5,43 @@
 {% block content %}
 
     <!-- <h1>Welcome to Sethub</h1>
-    <p>Discover and create lists on various topics.</p> -->
+    <p>Discover and create posts on various topics.</p> -->
     
-    <section class="list-container">
-        <!-- Example list items -->
-        {% for list in lists %}
-        <div class="list-item">
-            <div class="list-item-header">
-                <div class="list-icons">
+    <section class="post-container">
+        <!-- Example post items -->
+        {% for post in posts %}
+        <div class="post-item">
+            <div class="post-item-header">
+                <div class="post-icons">
                     <button class="icon-button"><i class="fas fa-pencil-alt"></i></button>
                     <button class="icon-button"><i class="fas fa-paper-plane"></i></button>
                     <button class="icon-button"><i class="fas fa-bookmark"></i></button>
                 </div>
-                <a href="#" class="list-title">
-                    <h2>{{ list.title }}</h2>
+                <a href="#" class="post-title">
+                    <h2>{{ post.title }}</h2>
                 </a>
-                <p>{{ list.description }}</p>
+                <p>{{ post.description }}</p>
             </div>
-            <div class="list-content">
-                <ul class="list-entries">
-                {% for entry in list.entries %}
+            <div class="post-content">
+                <ul class="post-entries">
+                {% for entry in post.entries %}
                 <li>{{ entry }}</li>
                 {% endfor %}
                 </ul>
             </div>
-            <div class="list-item-clickable">
+            <div class="post-item-clickable">
                 <button class="toggle-button">
                     <i class="fas fa-chevron-down"></i>
                 </button>
             
-                <div class="list-meta">
-                    <span>Items: {{ list.items_count }}</span>
-                    <span>Author: {{ list.author }}</span>
-                    <span>Updated: {{ list.updated }}</span>
+                <div class="post-meta">
+                    <span>Items: {{ post.items_count }}</span>
+                    <span>Author: {{ post.author }}</span>
+                    <span>Updated: {{ post.updated }}</span>
                 </div>
             </div>
         </div>
         {% endfor %}
-        <!-- Add more list items here -->
+        <!-- Add more post items here -->
     </section>
 {% endblock %}
