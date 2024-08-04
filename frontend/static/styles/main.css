@@ -1,4 +1,6 @@
 :root {
+    --header-height: 80px;
+    --color-logo: #ffffff;
     --color-background: #ffffff;
     --color-text: #24292f;
     --color-primary: #0366d6;
@@ -8,6 +10,28 @@
     --color-header-text: #ffffff;
     --color-footer-bg: #f6f8fa;
     --color-list-meta: #57606a;
+}
+
+@font-face {
+    font-family: 'LilitaOne';
+    src: url('../fonts/LilitaOne-Regular.ttf');
+}
+
+.logo {
+		color: var(--color-logo);
+		font-family: 'LilitaOne';
+		font-size: 40px;
+		font-weight:bold;
+		text-transform: uppercase;
+        letter-spacing: 1px;
+		/* background:url(../images/bg-logo.avif) no-repeat center/cover; */
+		/* -webkit-background-clip:text; */
+  		/* -webkit-text-fill-color: transparent; */
+}
+
+.logo--scrolled {
+    font-size: 18px;
+    transition: .45s ease all;
 }
 
 html, body {
@@ -27,12 +51,43 @@ body {
     line-height: 1.5; 
 }
 
-header {
+.header {
     background-color: var(--color-header-bg);
     color: var(--color-header-text);
-
     padding: 16px;
+    transition: all 0.3s ease;
+    height: var(--header-height);
 }
+
+.header__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.header--fixed-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.header--scrolled {
+    height: 30px;
+    padding-top: 0px
+}
+
+.header--scrolled .logo,
+.header--scrolled .nav-menu {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    transform: scale(0.8); /* Slightly reduce the size of logo and menu text */
+    transition: transform 0.3s ease;
+}
+
+
 
 nav {
     display: flex;
@@ -43,13 +98,7 @@ nav {
     padding: 0 20px;
 }
 
-.logo {
-    
-    font-size: 20px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-}
+
 
 nav ul {
     list-style-type: none;
@@ -196,6 +245,27 @@ footer {
     transform: rotate(180deg);
 }
 
+#back-to-top {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99;
+    border: none;
+    outline: none;
+    background-color: var(--color-primary);
+    color: white;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 50%;
+    font-size: 18px;
+    transition: opacity 0.3s;
+}
+
+#back-to-top:hover {
+    opacity: 0.8;
+}
+
 @media screen and (max-width: 768px) {
     .menu-icon {
         display: block;
@@ -224,4 +294,37 @@ footer {
     nav ul li {
         margin: 10px 0;
     }
+}
+
+.search-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.search-container form {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.search-container input[type="text"] {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px 0 0 4px;
+}
+
+.search-container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+
+.search-results {
+    margin-top: 20px;
 }

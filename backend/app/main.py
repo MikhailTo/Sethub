@@ -215,5 +215,17 @@ async def homepage(request: Request):
         context=context
     )
 
+@app.get("/search", response_class=HTMLResponse)
+async def search(request: Request, q: str = ""):
+    context = {
+        "title": "Search - Sethub",
+        "query": q
+    }
+    return templates.TemplateResponse(
+        request=request,
+        name="search.html",
+        context=context
+    )
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
