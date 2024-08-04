@@ -153,6 +153,18 @@ main {
     color: var(--color-list-meta);
 }
 
+.list-item-clickable {
+    background-color: var(--color-footer-bg);
+    padding: 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: relative;
+}
+
+.list-item-clickable:hover {
+    background-color: var(--color-border);
+}
 
 footer {
     flex-shrink: 0;
