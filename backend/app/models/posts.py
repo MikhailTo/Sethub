@@ -5,7 +5,7 @@ from .users import users_table
 
 metadata = MetaData()
 
-lists_table = Table(
+posts_table = Table(
     "lists",
     metadata,
     Column("id", Integer, primary_key=True),
