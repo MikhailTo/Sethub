@@ -22,6 +22,19 @@ document.querySelector('.menu-icon').addEventListener('click', function() {
 //         header.classList.remove('header--fixed-top');
 //     }
 // });
+// function updateScrollbarState() {
+//     const body = document.body;
+//     const html = document.documentElement;
+    
+//     if (html.scrollHeight > html.clientHeight) {
+//       body.style.pointerEvents = 'auto';
+//     } else {
+//       body.style.pointerEvents = 'none';
+//     }
+//   }
+  
+//   window.addEventListener('load', updateScrollbarState);
+//   window.addEventListener('resize', updateScrollbarState);
 
 document.addEventListener('DOMContentLoaded', function() {
     const backToTopButton = document.getElementById('back-to-top');
@@ -60,3 +73,9 @@ document.querySelectorAll('.list-item').forEach(item => {
     });
 });
 
+// function adjustContentWidth() {
+//     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+//     document.body.style.paddingRight = scrollbarWidth + 'px';
+// }
+// window.addEventListener('load', adjustContentWidth);
+// window.addEventListener('resize', adjustContentWidth);

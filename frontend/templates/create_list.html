@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{title}}{% endblock title %}
+{% block content %}
+<div class="create-list-container">
+    <h1>Create New List</h1>
+    <form action="/create" method="post">
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="items">List Items (one per line):</label>
+            <textarea id="items" name="items" required></textarea>
+        </div>
+        <button type="submit">Create List</button>
+    </form>
+</div>
+{% endblock %}
