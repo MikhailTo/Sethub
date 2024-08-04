@@ -6,7 +6,7 @@ class Settings(BaseSettings):
 
      # path to src folder
     MAIN_PATH: Path = Path(__file__).resolve().parent.parent.parent.parent
-    print(MAIN_PATH)
+    print(f"MAIN_PATH: {MAIN_PATH}")
     # path to app folder
     APP_PATH: Path = MAIN_PATH / 'app'
     # name of media folder
@@ -17,5 +17,9 @@ class Settings(BaseSettings):
     STATIC_FOLDER_NAME: Path = Path('frontend/static')
     # path to static folder
     STATIC_FOLDER: Path = MAIN_PATH / STATIC_FOLDER_NAME
-    print(STATIC_FOLDER)
+    # name of template folder
+    TEMPLATES_FOLDER_NAME: Path = Path('frontend/templates')
+    # path to templates folder
+    TEMPLATES_FOLDER: Path = MAIN_PATH / TEMPLATES_FOLDER_NAME
+
 settings = Settings()

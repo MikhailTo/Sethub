@@ -10,7 +10,7 @@ from core.config import settings
 
 router = APIRouter()
 
-templates = Jinja2Templates(directory=settings.APP_PATH / "frontend/templates")
+templates = Jinja2Templates(directory=settings.TEMPLATES_FOLDER)
 
 
 @router.get("/", response_class=HTMLResponse)
@@ -35,7 +35,7 @@ async def create_list(request: Request):
     }
     return templates.TemplateResponse(
         request=request,
-        name="create_list.html",
+        name="create_post.html",
         context=context
     )
 
