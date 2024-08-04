@@ -7,7 +7,7 @@ metadata = MetaData()
 users_table = Table(
     "users",
     metadata,
-    Column("id", Integer, primery_key=True),
+    Column("id", Integer, primary_key=True),
     Column("name", String(100)),
     Column("email", String(40), unique=True, index=True),
     Column("hashed_password", String()),

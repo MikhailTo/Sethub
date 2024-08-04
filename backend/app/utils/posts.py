@@ -1,8 +1,8 @@
 
-from app.models.database import database
-from sqlalchemy import select, desc
-from app.models.posts import posts_table
-from app.models.users import users_table
+from models.database import database
+from sqlalchemy import select, desc, func
+from models.posts import posts_table
+from models.users import users_table
 
 
 async def get_posts(post: id):
@@ -23,3 +23,7 @@ async def get_posts(post: id):
         .order_by(desc(posts_table.c.created_at))
     )
     return await database.fetch_all(query)
+
+async def get_posts_count():
+    query = select([func.count()]).select_from(posts_table)
+    return await database.fetch_val(query)
