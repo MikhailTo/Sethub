@@ -5,7 +5,8 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = 'Sethub'
 
      # path to src folder
-    MAIN_PATH: Path = Path(__file__).resolve().parent.parent.parent
+    MAIN_PATH: Path = Path(__file__).resolve().parent.parent.parent.parent
+    print(MAIN_PATH)
     # path to app folder
     APP_PATH: Path = MAIN_PATH / 'app'
     # name of media folder
@@ -13,8 +14,8 @@ class Settings(BaseSettings):
     # path to media folder
     MEDIA_PATH: Path = MAIN_PATH / MEDIA_FOLDER
     # name of static folder
-    STATIC_FOLDER_NAME: Path = Path('static')
+    STATIC_FOLDER_NAME: Path = Path('frontend/static')
     # path to static folder
     STATIC_FOLDER: Path = MAIN_PATH / STATIC_FOLDER_NAME
-
+    print(STATIC_FOLDER)
 settings = Settings()

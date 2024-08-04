@@ -3,10 +3,10 @@ from fastapi import FastAPI
 from models.database import database
 from routers import main, posts
 from fastapi.staticfiles import StaticFiles
-
+from core.config import settings
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="../../frontend/static"), name="static")
+app.mount("/static", StaticFiles(directory=settings.STATIC_FOLDER), name="static")
 
 @app.on_event("startup")
 async def startup():
