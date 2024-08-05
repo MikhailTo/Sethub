@@ -3,15 +3,17 @@ version: '3.8'
 services:
   database:
     image: postgres:16.1-alpine3.19
-    container_name: database_sethub
+    container_name: sethub-db
     restart: always
     volumes:
       - database_volume:/var/lib/postgresql/data/
       - web_static_volume:/usr/src/sethub/frontend/static
       - web_media_volume:/usr/src/sethub/frontend/media
     env_file:
-      - ./config/.env #.prod
-    # expose:
+      - ./.env #.prod
+    environment:
+      - POSTGRES_PASSWORD=5987263442    
+      # expose:
     #   - "5432"
     ports:
       - "5432:5432"
@@ -25,6 +27,7 @@ services:
       - 8000:8000
     container_name: web_sethub
     restart: always
+    command: 'uvicorn backend.app.main:app --host 0.0.0.0'
     volumes:
       - .:/usr/src/sethub/
       - web_static_volume:/usr/src/sethub/frontend/static
@@ -32,23 +35,23 @@ services:
     depends_on:
       - database
     env_file:
-      - ./config/.env #.prod
+      - ./.env #.prod
     networks:
       - network
 
-  nginx:
-    build: ./nginx
-    container_name: nginx_sethub
-    networks:
-      - network
-    ports:
-      - 1337:80
-    depends_on:
-      - web
-    volumes:
-      - ./config/nginx/conf.d:/etc/nginx/conf.d
-      - web_static_volume:/usr/src/sethub/frontend/static
-      - web_media_volume:/usr/src/sethub/frontend/media 
+  # nginx:
+  #   build: ./nginx
+  #   container_name: nginx_sethub
+  #   networks:
+  #     - network
+  #   ports:
+  #     - 1337:80
+  #   depends_on:
+  #     - web
+  #   volumes:
+  #     - ./config/nginx/conf.d:/etc/nginx/conf.d
+  #     - web_static_volume:/usr/src/sethub/frontend/static
+  #     - web_media_volume:/usr/src/sethub/frontend/media 
       
 volumes:
   database_volume:
