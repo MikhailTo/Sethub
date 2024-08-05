@@ -7,8 +7,8 @@ services:
     restart: always
     volumes:
       - database_volume:/var/lib/postgresql/data/
-      - web_static_volume:/usr/src/sethub/static
-      - web_media_volume:/usr/src/sethub/media
+      - web_static_volume:/usr/src/sethub/frontend/static
+      - web_media_volume:/usr/src/sethub/frontend/media
     env_file:
       - ./config/.env #.prod
     # expose:
@@ -27,8 +27,8 @@ services:
     restart: always
     volumes:
       - .:/usr/src/sethub/
-      - web_static_volume:/usr/src/sethub/static
-      - web_media_volume:/usr/src/sethub/media
+      - web_static_volume:/usr/src/sethub/frontend/static
+      - web_media_volume:/usr/src/sethub/frontend/media
     depends_on:
       - database
     env_file:
@@ -47,8 +47,8 @@ services:
       - web
     volumes:
       - ./config/nginx/conf.d:/etc/nginx/conf.d
-      - web_static_volume:/usr/src/sethub/static
-      - web_media_volume:/usr/src/sethub/media 
+      - web_static_volume:/usr/src/sethub/frontend/static
+      - web_media_volume:/usr/src/sethub/frontend/media 
       
 volumes:
   database_volume:

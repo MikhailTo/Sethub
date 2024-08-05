@@ -17,12 +17,12 @@ COPY . .
 
 EXPOSE 8000
 
-RUN mkdir -p /usr/src/sethub/static
-RUN mkdir -p /usr/src/sethub/media
+RUN mkdir -p /usr/src/sethub/frontend/static
+RUN mkdir -p /usr/src/sethub/frontend/media
 
-RUN chown -R 1000:1000 /usr/src/sethub/media
+RUN chown -R 1000:1000 /usr/src/sethub/frontend/media
 
 RUN adduser --disabled-password sethub
 USER sethub
 
-ENTRYPOINT ["/usr/src/sethub/entrypoint.sh"]
+ENTRYPOINT ["/usr/src/sethub/backend/entrypoint.sh"]
