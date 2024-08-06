@@ -5,7 +5,7 @@ from debug.prints import Debug as d
 class Settings(BaseSettings):
     PROJECT_NAME: str = 'Sethub'
     DEBUG: bool = True
-    DATA_BASE_MODE: str = 'SQLITE' #POSTGRES #LOCAL
+    DATA_BASE_MODE: str = 'POSTGRES' #POSTGRES #LOCAL
 
     # path to src folder
     MAIN_PATH: Path = Path(__file__).resolve().parent.parent.parent.parent

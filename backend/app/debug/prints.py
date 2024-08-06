@@ -2,8 +2,9 @@ from functools import singledispatch
 import inspect
 
 class Debug:
-    @staticmethod
+
     @singledispatch
+    @staticmethod
     def print(arg):
         raise NotImplementedError("Не реализовано")
 
@@ -18,12 +19,12 @@ class Debug:
     def _(arg: tuple):
         for value in arg:
             print(value)
-
+    @classmethod
     def print_args_class(self, title, obj):
         print(title)
         for key, value in obj.__dict__.items():
             print(f"{key}: {value}")
-
+    @classmethod
     def print_methods_class(self, title, obj):
         print(title)
         # Получаем список методов и атрибутов класса
