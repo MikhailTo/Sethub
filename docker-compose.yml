@@ -3,7 +3,7 @@ version: '3.8'
 services:
   database:
     image: postgres:16.1-alpine3.19
-    container_name: sethub-db
+    container_name: db_sethub
     restart: always
     volumes:
       - database_volume:/var/lib/postgresql/data/
