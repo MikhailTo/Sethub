@@ -1,12 +1,14 @@
 from pathlib import Path
 from pydantic_settings import BaseSettings
+from debug.prints import Debug as d
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = 'Sethub'
+    DEBUG: bool = True
+    DATA_BASE_MODE: str = 'SQLITE' #POSTGRES #LOCAL
 
-     # path to src folder
+    # path to src folder
     MAIN_PATH: Path = Path(__file__).resolve().parent.parent.parent.parent
-    print(f"MAIN_PATH: {MAIN_PATH}")
     # path to app folder
     APP_PATH: Path = MAIN_PATH / 'app'
     # name of media folder
@@ -23,3 +25,5 @@ class Settings(BaseSettings):
     TEMPLATES_FOLDER: Path = MAIN_PATH / TEMPLATES_FOLDER_NAME
 
 settings = Settings()
+
+d.print_args_class("Settings: ", settings)

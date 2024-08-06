@@ -1,13 +1,27 @@
 from os import environ
 import databases
+from core.config import settings
+from debug.prints import Debug as d
 
-DB_USER = environ.get("DB_USER", "user")
-DB_PASSWORD = environ.get("DB_PASSWORD", "password")
-DB_HOST = environ.get("DB_HOST", "localhost")
 
-#without database for tests
+DB_USER = environ.get("DB_USER", "user"),
+DB_PASSWORD = environ.get("DB_PASSWORD", "password"),
+DB_HOST = environ.get("DB_HOST", "localhost"),
+DB_PORT = environ.get("DB_PORT", 5432),
 DB_NAME = "sethub-db"
+
+d.print(("DB Settings:", DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME))
+
+if settings.DATA_BASE_MODE == 'SQLITE':
+    database_url = f"sqlite://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+elif settings.DATA_BASE_MODE == 'POSTGRES':
+    database_url = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
 SQLALCHEMY_DATEBASE_URL = (
-    f"postgresql://%(DB_USER):%(DB_PASS)@%(DB_HOST):5432/%(DB_NAME)"
+    database_url
 )
-database = databases.Database(SQLALCHEMY_DATEBASE_URL)
+
+try:
+    database = databases.Database(SQLALCHEMY_DATEBASE_URL)
+except Exception as e:
+        print(f"Ошибка подключения к базе данных: {e}")

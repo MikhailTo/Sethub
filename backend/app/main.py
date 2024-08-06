@@ -10,10 +10,7 @@ app.mount("/static", StaticFiles(directory=settings.STATIC_FOLDER), name="static
 
 @app.on_event("startup")
 async def startup():
-    try:
         await database.connect()
-    except Exception as e:
-        print(f"Error connecting to database: {e}")
         
 
 @app.on_event("shutdown")
