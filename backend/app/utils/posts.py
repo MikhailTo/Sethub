@@ -1,8 +1,8 @@
 
-from models.database import database
+from app.models.database import database
 from sqlalchemy import select, desc, func
-from models.posts import posts_table
-from models.users import users_table
+from app.models.posts import posts_table
+from app.models.users import users_table
 
 
 async def get_posts(post: id):

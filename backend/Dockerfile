@@ -24,5 +24,3 @@ RUN chown -R 1000:1000 /usr/src/sethub/frontend/media
 
 RUN adduser --disabled-password sethub
 USER sethub
-
-# ENTRYPOINT ["/usr/src/sethub/backend/docker-entrypoint.sh"]

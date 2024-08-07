@@ -27,7 +27,7 @@ services:
       - 8000:8000
     container_name: web_sethub
     restart: always
-    command: sh -c "cd /usr/src/sethub/backend/app && uvicorn main:app --host 0.0.0.0"
+    command: sh -c "cd /usr/src/sethub/backend/app && alembic upgrade head && uvicorn main:app --host 0.0.0.0"
     volumes:
       - .:/usr/src/sethub/
       - web_static_volume:/usr/src/sethub/frontend/static
