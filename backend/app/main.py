@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 from models.database import database
-from routers import main, posts
+from routers import main, posts, users
 from fastapi.staticfiles import StaticFiles
 from core.config import settings
 app = FastAPI()
@@ -18,7 +18,7 @@ app.mount("/static", StaticFiles(directory=settings.STATIC_FOLDER), name="static
 
 app.include_router(main.router)
 app.include_router(posts.router)
-# app.include_router(users.router)
+app.include_router(users.router)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
