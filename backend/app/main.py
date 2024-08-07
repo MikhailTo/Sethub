@@ -1,9 +1,10 @@
 import uvicorn
 from fastapi import FastAPI
-from models.database import database
-from routers import main, posts, users
 from fastapi.staticfiles import StaticFiles
-from core.config import settings
+from app.models.database import database
+from app.routers import main, posts, users
+from app.core.config import settings
+
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory=settings.STATIC_FOLDER), name="static")

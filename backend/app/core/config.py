@@ -1,6 +1,6 @@
 from pathlib import Path
 from pydantic_settings import BaseSettings
-from debug.prints import Debug as d
+from app.debug.prints import Debug as d
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = 'Sethub'

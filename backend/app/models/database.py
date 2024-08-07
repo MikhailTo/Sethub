@@ -1,7 +1,7 @@
 from os import environ
 import databases
-from core.config import settings
-from debug.prints import Debug as d
+from app.core.config import settings
+from app.debug.prints import Debug as d
 
 
 DB_USER = environ.get("DB_USER", "postgres")

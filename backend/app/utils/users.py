@@ -4,9 +4,9 @@ import hashlib
 from datetime import datetime, timedelta
 from sqlalchemy import and_
 
-from models.database import database
-from models.users import tokens_table, users_table
-from schemas import users as user_schema
+from app.models.database import database
+from app.models.users import tokens_table, users_table
+from app.schemas import users as user_schema
 
 # Алгоритм в порядке выполнения для работы с пользователями в Sethub:
 # Этот порядок отражает типичный жизненный цикл взаимодействия с пользователем в системе, 
@@ -72,7 +72,7 @@ async def create_user_token(user_id: int) -> user_schema.TokenBase:
     ''' Создает токен для пользователя '''
     query = (
         tokens_table.insert() #  
-        .values(expires=datetime.now() + timedelta(week=2),  # новый токен для пользователя с истечением срока действия через 2 недели.
+        .values(expires=datetime.now() + timedelta(weeks=2),  # новый токен для пользователя с истечением срока действия через 2 недели.
                 user_id=user_id) # 
         .returning(tokens_table.c.token, tokens_table.c.expires) # Этот код возвращает только поля token и expires из таблицы tokens_table.
     )
