@@ -5,7 +5,7 @@ from app.models.posts import posts_table
 from app.models.users import users_table
 
 
-async def get_posts(post: id):
+async def read_root():
     query = (
         select(
             [

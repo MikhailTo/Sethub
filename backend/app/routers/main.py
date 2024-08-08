@@ -60,3 +60,13 @@ async def about(request: Request):
         request=request,
         name = "about.html", 
         context=context)
+    
+@router.get("/auth", response_class=HTMLResponse)
+async def auth(request: Request):
+    context = {
+        "title": "Auth",
+    }
+    return templates.TemplateResponse(
+        request=request,
+        name = "auth.html", 
+        context=context)
