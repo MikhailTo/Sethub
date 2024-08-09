@@ -4,9 +4,9 @@ import hashlib
 from datetime import datetime, timedelta
 from sqlalchemy import and_
 
-from app.models.database import database
-from app.models.users import tokens_table, users_table
-from app.schemas import users as user_schema
+from backend.app.models.database import database
+from backend.app.models.users import tokens_table, users_table
+from backend.app.schemas import users as user_schema
 
 # Алгоритм в порядке выполнения для работы с пользователями в Sethub:
 # Этот порядок отражает типичный жизненный цикл взаимодействия с пользователем в системе, 

@@ -1,9 +1,9 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from app.models.database import database
-from app.routers import main, posts, users
-from app.core.config import settings
+# from app.models.database import database
+from backend.app.routers import main, posts, users
+from backend.app.core.config import settings
 
 app = FastAPI()
 

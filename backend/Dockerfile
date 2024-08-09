@@ -6,6 +6,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 # Отключаем буферизацию вывода
 ENV PYTHONUNBUFFERED 1 
 
+ENV POETRY_VIRTUALENVS_CREATE=false
+
 # https://python-poetry.org/docs/configuration/#using-environment-variables
 # https://gist.github.com/soof-golan/6ebb97a792ccd87816c0bda1e6e8b8c2
 # Configure Poetry
@@ -36,15 +38,18 @@ COPY poetry.lock pyproject.toml ./
 # [OPTIONAL] Validate the project is properly configured
 RUN poetry check
 
+RUN apk update \
+    && apk add postgresql-client build-base postgresql-dev libpq-dev
+
 # Install Dependencies
-RUN poetry install --no-interaction --no-cache --without dev
+RUN poetry install --no-interaction --no-cache --no-dev
 # RUN poetry install --no-dev
 
 # COPY requirements.txt /temp/requirements.txt
 # RUN pip install -r /temp/requirements.txt
 
-RUN apk update \
-    && apk add postgresql-client build-base postgresql-dev libpq-dev
+
+
 
 COPY . .
 
@@ -54,6 +59,11 @@ RUN mkdir -p /usr/src/sethub/frontend/static
 RUN mkdir -p /usr/src/sethub/frontend/media
 
 RUN chown -R 1000:1000 /usr/src/sethub/frontend/media
+
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait /wait
+RUN chmod +x /wait
+
+CMD ["./docker-entrypoint.sh"]
 
 RUN adduser --disabled-password sethub
 USER sethub

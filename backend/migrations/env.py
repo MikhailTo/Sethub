@@ -10,7 +10,7 @@ from alembic import context
 # add current path to PYTHONPATH, otherwise app module will not be found when alembic executing
 sys.path.append(os.getcwd())
 
-from app.models import database, posts, users
+from backend.app.models import database, posts, users
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -18,7 +18,7 @@ config = context.config
 
 section = config.config_ini_section
 config.set_section_option(section, "DB_USER", database.DB_USER)
-config.set_section_option(section, "DB_PASS", database.DB_PASSWORD)
+config.set_section_option(section, "DB_PASSWORD", database.DB_PASSWORD)
 config.set_section_option(section, "DB_NAME", database.DB_NAME)
 config.set_section_option(section, "DB_HOST", database.DB_HOST)
 

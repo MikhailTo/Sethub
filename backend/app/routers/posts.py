@@ -1,4 +1,4 @@
-from app.utils import posts as post_utils
+from backend.app.utils import posts as post_utils
 from fastapi import APIRouter
 
 router = APIRouter()

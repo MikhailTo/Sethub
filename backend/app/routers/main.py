@@ -4,9 +4,9 @@ from fastapi.responses import HTMLResponse
 
 from fastapi.templating import Jinja2Templates
 
-from app.utils import posts as post_utils
-from app.data.posts import Posts as local_posts
-from app.core.config import settings
+from backend.app.utils import posts as post_utils
+from backend.app.data.posts import Posts as local_posts
+from backend.app.core.config import settings
 
 router = APIRouter()
 

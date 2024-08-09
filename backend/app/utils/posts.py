@@ -1,8 +1,8 @@
 
-from app.models.database import database
+from backend.app.models.database import database
 from sqlalchemy import select, desc, func
-from app.models.posts import posts_table
-from app.models.users import users_table
+from backend.app.models.posts import posts_table
+from backend.app.models.users import users_table
 
 
 async def read_root():

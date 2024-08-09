@@ -3,7 +3,6 @@ name = "sethub"
 version = "0.1.0"
 description = ""
 authors = ["MikhailTo <toshkin.mikhail@yandex.ru>"]
-readme = "README.md"
 repository = "https://github.com/MikhailTo/Sethub"
 
 [tool.poetry.dependencies]
@@ -11,6 +10,8 @@ python = "^3.11"
 fastapi = {extras = ["all"], version = "0.112.0"}
 databases = "^0.9.0"
 alembic = "^1.13.2"
+psycopg2 = "^2.9.9"
+psycopg2-binary = "^2.9.9"
 
 
 [build-system]

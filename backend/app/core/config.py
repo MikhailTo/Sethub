@@ -1,11 +1,11 @@
 from pathlib import Path
 from pydantic_settings import BaseSettings
-from app.debug.prints import Debug as d
+
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = 'Sethub'
     DEBUG: bool = True
-    DATA_BASE_MODE: str = 'POSTGRES' #POSTGRES #LOCAL
+    DATA_BASE_MODE: str = 'POSTGRES'
 
     # path to src folder
     MAIN_PATH: Path = Path(__file__).resolve().parent.parent.parent.parent
@@ -25,5 +25,3 @@ class Settings(BaseSettings):
     TEMPLATES_FOLDER: Path = MAIN_PATH / TEMPLATES_FOLDER_NAME
 
 settings = Settings()
-
-d.print_args_class("Settings: ", settings)
