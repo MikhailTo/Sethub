@@ -5,4 +5,9 @@ app.egg-info
 .mypy_cache
 .coverage
 htmlcov
-.venv
+backend/.venv
+.vscode
+.git
+Dockerfile
+docker-compose.yml
+README.md

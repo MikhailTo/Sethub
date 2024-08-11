@@ -7,6 +7,7 @@ class UserCreate(BaseModel):
     email: EmailStr
     name: str
     password: str
+        
 
 class UserBase(BaseModel):
     ''' Формирует тело ответа с деталями пользователя '''
@@ -33,7 +34,7 @@ class TokenBase(BaseModel):
     
 
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class User(UserBase):
     ''' Формирует тело ответа с деталями пользователя и токеном'''

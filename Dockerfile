@@ -24,8 +24,6 @@ RUN python3 -m venv $POETRY_VENV \
 	&& $POETRY_VENV/bin/pip install poetry==${POETRY_VERSION}
 # RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
 
-# RUN pip install --upgrade pip
-
 # Add `poetry` to PATH
 ENV PATH="${PATH}:${POETRY_VENV}/bin"
 
@@ -43,16 +41,10 @@ RUN apk update \
 
 # Install Dependencies
 RUN poetry install --no-interaction --no-cache --no-dev
-# RUN poetry install --no-dev
 
-# COPY requirements.txt /temp/requirements.txt
-# RUN pip install -r /temp/requirements.txt
-
-
-
+RUN adduser --disabled-password sethub
 
 COPY . .
-
 EXPOSE 8000
 
 RUN mkdir -p /usr/src/sethub/frontend/static
@@ -62,8 +54,10 @@ RUN chown -R 1000:1000 /usr/src/sethub/frontend/media
 
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait /wait
 RUN chmod +x /wait
+RUN chown sethub:sethub /wait
+RUN chmod +x ./backend/docker-entrypoint.sh
+RUN chown sethub:sethub /usr/src/sethub/backend/docker-entrypoint.sh
 
-CMD ["./docker-entrypoint.sh"]
-
-RUN adduser --disabled-password sethub
+CMD ["/bin/sh", "/usr/src/sethub/backend/docker-entrypoint.sh"]
 USER sethub
+

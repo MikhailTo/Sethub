@@ -35,12 +35,12 @@ services:
       - "-c"
       - "pg_stat_statements.track=all"
     env_file:
-      - ./.env #.prod
-    environment:
-      POSTGRES_DB: "localhost"
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
-      PGDATA: "/var/lib/postgresql/data/pgdata"
+      - ./backend/.env #.prod
+    # environment:
+      # POSTGRES_DB: "localhost"
+      # POSTGRES_USER: "postgres"
+      # POSTGRES_PASSWORD: "postgres"
+      # PGDATA: "/var/lib/postgresql/data/pgdata"
     # environment:
     #   - POSTGRES_PASSWORD=5987263442    
       # expose:
@@ -48,7 +48,7 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U habrpguser -d habrdb"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d sethub-db"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -60,20 +60,22 @@ services:
           cpus: '1'
           memory: 4G
     volumes:
+      - ./db:/docker-entrypoint-initdb.d
       - database_volume:/var/lib/postgresql/data/
       - web_static_volume:/usr/src/sethub/frontend/static
       - web_media_volume:/usr/src/sethub/frontend/media
     networks:
-      - postgres
       - network
   
   pgadmin:
     container_name: pgadmin_container
     image: dpage/pgadmin4:7.2
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "habrpguser@habr.com"
-      PGADMIN_DEFAULT_PASSWORD: "pgadminpwd4habr"
-      PGADMIN_CONFIG_SERVER_MODE: "False"
+    env_file:
+    - ./backend/.env #.prod
+    # environment:
+    #   PGADMIN_DEFAULT_EMAIL: "habrpguser@habr.com"
+    #   PGADMIN_DEFAULT_PASSWORD: "pgadminpwd4habr"
+    #   PGADMIN_CONFIG_SERVER_MODE: "False"
     volumes:
       - pgadmin_volume:/var/lib/pgadmin
     ports:
@@ -85,17 +87,18 @@ services:
           cpus: '0.5'
           memory: 1G
     networks:
-      - postgres
       - network
 
   postgres_exporter:
     container_name: exporter_container
     image: prometheuscommunity/postgres-exporter:v0.10.1
-    environment:
-      DATA_SOURCE_URI: "postgres:5432/habrdb?sslmode=disable"
-      DATA_SOURCE_USER: "habrpguser"
-      DATA_SOURCE_PASS: "pgpwd4habr"
-      PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
+    env_file:
+    - ./backend/.env #.prod
+    # environment:
+    #   DATA_SOURCE_URI: "postgres:5432/sethub-db?sslmode=disable"
+    #   DATA_SOURCE_USER: "postgres"
+    #   DATA_SOURCE_PASS: "postgres"
+    #   PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
     volumes:
       - ./queries.yaml:/etc/postgres_exporter/queries.yaml:ro
     ports:
@@ -107,7 +110,6 @@ services:
           cpus: '0.2'
           memory: 500M
     networks:
-      - postgres
       - network
 
   web:
@@ -119,13 +121,13 @@ services:
     restart: always
     # command: sh -c "cd /usr/src/sethub/backend/app && alembic upgrade head && uvicorn main:app --host 0.0.0.0"
     volumes:
-      - .:/usr/src/sethub/
+      # - .:/usr/src/sethub/
       - web_static_volume:/usr/src/sethub/frontend/static
       - web_media_volume:/usr/src/sethub/frontend/media
     depends_on:
       - database
     env_file:
-      - ./.env #.prod
+      - ./backend/.env #.prod
     networks:
       - network
 
@@ -151,6 +153,4 @@ volumes:
 
 networks:
   network:
-    driver: bridge
-  postgres:
     driver: bridge
