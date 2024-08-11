@@ -9,6 +9,8 @@ app = FastAPI()
 
 app.mount("/static", StaticFiles(directory=settings.STATIC_FOLDER), name="static")
 
+#Starting from version 1.4 SQLAlchemy supports asyncio. 
+#This means you don't need external tools like encode/databases.
 @app.on_event("startup")
 async def startup():
         await database.connect()
