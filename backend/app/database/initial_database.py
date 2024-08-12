@@ -5,7 +5,8 @@ and ORM components using SQLAlchemy with asynchronous support.
 Usage:
 
     from backend.app.core.config import settings
-
+    from backend.app.database.initial_databes import InitialDatabase
+    
     init_db = InitialDatabase(settings)
 
     SyncSessionLocal = init_db.make_session()
