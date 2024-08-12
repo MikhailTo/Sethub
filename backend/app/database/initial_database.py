@@ -1,4 +1,4 @@
-"""
+'''
 This module provides functionality for initializing and setting up database connections
 and ORM components using SQLAlchemy with asynchronous support.
 
@@ -23,9 +23,8 @@ https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#sqlalchemy.ext.asy
  - session_maker_params: 
 https://docs.sqlalchemy.org/en/20/orm/session_api.html#sqlalchemy.orm.Session.__init__
 
+'''
 
-
-"""
 from typing import Dict, Any
 from sqlalchemy import URL
 from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine, create_async_engine

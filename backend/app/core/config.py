@@ -45,7 +45,7 @@ class Settings(BaseSettings):
     FRONTEND_PATH:          Path    =   MAIN_PATH / FRONTEND_FOLDER_NAME
     APP_PATH:               Path    =   BACKEND_PATH / APP_FOLDER_NAME
     MEDIA_PATH:             Path    =   FRONTEND_PATH / MEDIA_FOLDER_NAME
-    STATIC_FOLDER:          Path    =   FRONTEND_PATH / STATIC_FOLDER_NAME
-    TEMPLATES_FOLDER:       Path    =   FRONTEND_PATH / TEMPLATES_FOLDER_NAME
+    STATIC_PATH:            Path    =   FRONTEND_PATH / STATIC_FOLDER_NAME
+    TEMPLATES_PATH:         Path    =   FRONTEND_PATH / TEMPLATES_FOLDER_NAME
 
 settings = Settings()
