@@ -2,7 +2,17 @@
 This module provides functionality for initializing and setting up database connections
 and ORM components using SQLAlchemy with asynchronous support.
 
-Arguments:
+Usage:
+
+    from backend.app.core.config import settings
+
+    init_db = InitialDatabase(settings)
+
+    SyncSessionLocal = init_db.make_session()
+
+    Base = init_db.generate_base()
+
+Note:
  - url_params
 https://docs.sqlalchemy.org/en/20/core/engines.html#sqlalchemy.engine.URL.create
 
@@ -13,13 +23,7 @@ https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#sqlalchemy.ext.asy
 https://docs.sqlalchemy.org/en/20/orm/session_api.html#sqlalchemy.orm.Session.__init__
 
 
-Use:
-    from backend.app.core.config import settings
 
-    init_db = InitialDatabase(settings)
-
-    SyncSessionLocal = init_db.make_session()
-    Base = init_db.generate_base()
 """
 from typing import Dict, Any
 from sqlalchemy import URL

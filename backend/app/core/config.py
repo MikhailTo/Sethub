@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     MEDIA_FOLDER_NAME:      Path = Path('media')
     STATIC_FOLDER_NAME:     Path = Path('static')
     TEMPLATES_FOLDER_NAME:  Path = Path('templates')
- 
+
     # Paths
     MAIN_PATH:          Path = Path(__file__).resolve().parents[3]
     BACKEND_PATH:       Path = MAIN_PATH / BACKEND_FOLDER_NAME
