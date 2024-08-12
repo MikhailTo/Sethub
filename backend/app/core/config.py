@@ -1,27 +1,36 @@
+from os import getenv as get
 from pathlib import Path
+
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = 'Sethub'
-    DEBUG: bool = True
-    DATA_BASE_MODE: str = 'POSTGRES'
+    # Database
+    DB_DIALECT:     str     =   get("DB_DIALECT", "postgresql")
+    DB_DRIVERNAME:  str     =   get("DB_DRIVERNAME", "asyncpg")
+    DB_USERNAME:    str     =   get("DB_USERNAME", "postgres") 
+    DB_PASSWORD:    str     =   get("DB_PASSWORD", "postgres")
+    DB_HOST:        str     =   get("DB_HOST", "localhost")
+    DB_PORT:        int     =   get("DB_PORT", 5432)
+    DB_NAME:        str     =   get("DB_NAME", "db_sethub")
+    DB_ECHO:        bool    =   get("DB_ECHO", True)
 
-    # path to src folder
-    MAIN_PATH: Path = Path(__file__).resolve().parent.parent.parent.parent
-    # path to app folder
-    APP_PATH: Path = MAIN_PATH / 'app'
-    # name of media folder
-    MEDIA_FOLDER: Path = Path('media')
-    # path to media folder
-    MEDIA_PATH: Path = MAIN_PATH / MEDIA_FOLDER
-    # name of static folder
-    STATIC_FOLDER_NAME: Path = Path('frontend/static')
-    # path to static folder
-    STATIC_FOLDER: Path = MAIN_PATH / STATIC_FOLDER_NAME
-    # name of template folder
-    TEMPLATES_FOLDER_NAME: Path = Path('frontend/templates')
-    # path to templates folder
-    TEMPLATES_FOLDER: Path = MAIN_PATH / TEMPLATES_FOLDER_NAME
+
+    # Folder names
+    BACKEND_FOLDER_NAME:    Path = Path('backend')
+    FRONTEND_FOLDER_NAME:   Path = Path('frontend')
+    APP_FOLDER_NAME:        Path = Path('app')
+    MEDIA_FOLDER_NAME:      Path = Path('media')
+    STATIC_FOLDER_NAME:     Path = Path('static')
+    TEMPLATES_FOLDER_NAME:  Path = Path('templates')
+    
+    # Paths
+    MAIN_PATH:          Path = Path(__file__).resolve().parents[3]
+    BACKEND_PATH:       Path = MAIN_PATH / BACKEND_FOLDER_NAME
+    FRONTEND_PATH:      Path = MAIN_PATH / FRONTEND_FOLDER_NAME
+    APP_PATH:           Path = BACKEND_PATH / APP_FOLDER_NAME
+    MEDIA_PATH:         Path = FRONTEND_PATH / MEDIA_FOLDER_NAME
+    STATIC_FOLDER:      Path = FRONTEND_PATH / STATIC_FOLDER_NAME
+    TEMPLATES_FOLDER:   Path = FRONTEND_PATH / TEMPLATES_FOLDER_NAME
 
 settings = Settings()

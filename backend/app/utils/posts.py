@@ -1,5 +1,5 @@
 
-from backend.app.models.database import database
+from backend.app.database.engine import database
 from sqlalchemy import select, desc, func
 from backend.app.models.posts import posts_table
 from backend.app.models.users import users_table

@@ -4,7 +4,7 @@ import hashlib
 from datetime import datetime, timedelta
 from sqlalchemy import and_
 
-from backend.app.models.database import database
+from backend.app.database.engine import database
 from backend.app.models.users import tokens_table, users_table
 from backend.app.schemas import users as user_schema
 
