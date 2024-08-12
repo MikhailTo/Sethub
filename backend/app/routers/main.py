@@ -1,3 +1,5 @@
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi import APIRouter
 from fastapi import Request
 from fastapi.responses import HTMLResponse
@@ -9,7 +11,9 @@ from backend.app.data.posts import Posts as local_posts
 from backend.app.core.config import settings
 
 router = APIRouter()
+app = FastAPI()
 
+app.mount("/static", StaticFiles(directory=settings.STATIC_FOLDER), name="static")
 templates = Jinja2Templates(directory=settings.TEMPLATES_FOLDER)
 
 

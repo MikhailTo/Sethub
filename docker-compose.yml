@@ -1,155 +1,38 @@
-version: '3.9'
-
+version: "3.8"
 services:
-  database:
-    container_name: db_sethub
-    image: postgres:16.1-alpine3.19
-    command:
-      - "postgres"
-      - "-c"
-      - "max_connections=50"
-      - "-c"
-      - "shared_buffers=1GB"
-      - "-c"
-      - "effective_cache_size=4GB"
-      - "-c"
-      - "work_mem=16MB"
-      - "-c"
-      - "maintenance_work_mem=512MB"
-      - "-c"
-      - "random_page_cost=1.1"
-      - "-c"
-      - "temp_file_limit=10GB"
-      - "-c"
-      - "log_min_duration_statement=200ms"
-      - "-c"
-      - "idle_in_transaction_session_timeout=10s"
-      - "-c"
-      - "lock_timeout=1s"
-      - "-c"
-      - "statement_timeout=60s"
-      - "-c"
-      - "shared_preload_libraries=pg_stat_statements"
-      - "-c"
-      - "pg_stat_statements.max=10000"
-      - "-c"
-      - "pg_stat_statements.track=all"
-    env_file:
-      - ./backend/.env #.prod
-    # environment:
-      # POSTGRES_DB: "localhost"
-      # POSTGRES_USER: "postgres"
-      # POSTGRES_PASSWORD: "postgres"
-      # PGDATA: "/var/lib/postgresql/data/pgdata"
-    # environment:
-    #   - POSTGRES_PASSWORD=5987263442    
-      # expose:
-    #   - "5432"
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d sethub-db"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 4G
-    volumes:
-      - ./db:/docker-entrypoint-initdb.d
-      - database_volume:/var/lib/postgresql/data/
-      - web_static_volume:/usr/src/sethub/frontend/static
-      - web_media_volume:/usr/src/sethub/frontend/media
-    networks:
-      - network
-  
-  pgadmin:
-    container_name: pgadmin_container
-    image: dpage/pgadmin4:7.2
-    env_file:
-    - ./backend/.env #.prod
-    # environment:
-    #   PGADMIN_DEFAULT_EMAIL: "habrpguser@habr.com"
-    #   PGADMIN_DEFAULT_PASSWORD: "pgadminpwd4habr"
-    #   PGADMIN_CONFIG_SERVER_MODE: "False"
-    volumes:
-      - pgadmin_volume:/var/lib/pgadmin
-    ports:
-      - "5050:80"
-    restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 1G
-    networks:
-      - network
-
-  postgres_exporter:
-    container_name: exporter_container
-    image: prometheuscommunity/postgres-exporter:v0.10.1
-    env_file:
-    - ./backend/.env #.prod
-    # environment:
-    #   DATA_SOURCE_URI: "postgres:5432/sethub-db?sslmode=disable"
-    #   DATA_SOURCE_USER: "postgres"
-    #   DATA_SOURCE_PASS: "postgres"
-    #   PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
-    volumes:
-      - ./queries.yaml:/etc/postgres_exporter/queries.yaml:ro
-    ports:
-      - "9187:9187"
-    restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: '0.2'
-          memory: 500M
-    networks:
-      - network
-
   web:
+    container_name: web_sethub
     build: 
       context: .
-    ports:
-      - 8000:8000
-    container_name: web_sethub
-    restart: always
-    # command: sh -c "cd /usr/src/sethub/backend/app && alembic upgrade head && uvicorn main:app --host 0.0.0.0"
-    volumes:
-      # - .:/usr/src/sethub/
-      - web_static_volume:/usr/src/sethub/frontend/static
-      - web_media_volume:/usr/src/sethub/frontend/media
     depends_on:
       - database
     env_file:
-      - ./backend/.env #.prod
+      - ./.env
+    ports:
+      - 8000:8000
+    restart: always
+    volumes:
+      - web_static_volume:/usr/src/sethub/frontend/static
     networks:
       - network
 
-  # nginx:
-  #   build: ./nginx
-  #   container_name: nginx_sethub
-  #   networks:
-  #     - network
-  #   ports:
-  #     - 1337:80
-  #   depends_on:
-  #     - web
-  #   volumes:
-  #     - ./config/nginx/conf.d:/etc/nginx/conf.d
-  #     - web_static_volume:/usr/src/sethub/frontend/static
-  #     - web_media_volume:/usr/src/sethub/frontend/media 
-      
+  database:
+    container_name: database_sethub
+    image: postgres:16.1-alpine3.19
+    env_file:
+      - ./.env
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    volumes:
+      - database_volume:/var/lib/postgresql/data/
+    networks:
+      - network
+
 volumes:
   database_volume:
-  pgadmin_volume:
   web_static_volume:
-  web_media_volume:
+
 
 networks:
   network:
