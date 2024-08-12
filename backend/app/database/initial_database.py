@@ -74,7 +74,7 @@ class InitialDatabase():
             )
         return sync_engine
 
-    def __create_session(self, sync_engine: AsyncEngine, 
+    def __create_session(self, sync_engine: AsyncEngine,
                          sessionmaker_params: Dict[str, Any]) -> sessionmaker:
         """
         Create a sync_session_local by sessionmaker for asynchronous database.
