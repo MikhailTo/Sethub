@@ -9,7 +9,7 @@ Usage:
 
     init_db = InitialDatabase(settings)
 
-    SyncSessionLocal = init_db.make_session()
+    SyncSessionLocal = init_db.make_sync_session() # or init_db.make_session()
 
     Base = init_db.generate_base()
 
@@ -63,7 +63,7 @@ class InitialDatabase():
         url = URL.create(**url_params)
         return url
 
-    def __create_engine(self, url: str,
+    def __create_sync_engine(self, url: str,
                         create_async_engine_params: Dict[str, bool]) -> AsyncEngine:
         """
         Create an asynchronous SQLAlchemy engine.
@@ -74,7 +74,7 @@ class InitialDatabase():
             )
         return sync_engine
 
-    def __create_session(self, sync_engine: AsyncEngine,
+    def __create_sync_session(self, sync_engine: AsyncEngine,
                          sessionmaker_params: Dict[str, Any]) -> sessionmaker:
         """
         Create a sync_session_local by sessionmaker for asynchronous database.
@@ -86,13 +86,13 @@ class InitialDatabase():
         )
         return sync_session_local
 
-    def make_session(self) -> sessionmaker:
+    def make_sync_session(self) -> sessionmaker:
         """
         Create and configure a session for database operations.
         """
         url = self.__create_url(self.url_params)
-        sync_engine = self.__create_engine(url, self.create_async_engine_params)
-        sync_session_local = self.__create_session(sync_engine, self.sessionmaker_params)
+        sync_engine = self.__create_sync_engine(url, self.create_async_engine_params)
+        sync_session_local = self.__create_sync_session(sync_engine, self.sessionmaker_params)
         return sync_session_local
 
     def generate_base(self) -> Any:
