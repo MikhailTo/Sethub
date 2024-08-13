@@ -30,7 +30,7 @@ from sqlalchemy import URL
 from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine, create_async_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-
+from backend.app.core.config import settings
 
 class InitialDatabase():
     """
@@ -101,3 +101,5 @@ class InitialDatabase():
         """
         base = declarative_base()
         return base
+
+Base = InitialDatabase(settings).generate_base()

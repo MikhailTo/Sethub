@@ -1,18 +1,20 @@
-import sqlalchemy
-from sqlalchemy import Table, Column, Text, Integer, String, DateTime, MetaData, ForeignKey
+from datetime import datetime
+from sqlalchemy import Mapped, mapped_column, func
+from sqlalchemy import ForeignKey, String, Text
 from sqlalchemy.types import ARRAY
-from .users import users_table
 
-metadata = MetaData()
+from backend.app.database.initial_database import Base
 
-posts_table = Table(
-    "lists",
-    metadata,
-    Column("id", Integer, primary_key=True),
-    Column("user_id", ForeignKey(users_table.c.id)),
-    Column("created_at", DateTime()),
-    Column("updated_at", DateTime()),
-    Column("title", String(100)),
-    Column("description", Text()),
-    Column("entries", ARRAY(Text))
-)
+class Post(Base):
+    __tablename__ = "posts"
+
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    created_at: Mapped[datetime] = mapped_column(insert_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(insert_default=func.now(), onupdate=func.now()) # !!! Check it
+    title: Mapped[str] = mapped_column(String(100))
+    description: Mapped[str] = mapped_column(Text())
+    entries: Mapped[list[str]] = mapped_column(ARRAY(Text()))
+
+    def __repr__(self) -> str:
+        return f"Post(id={self.id!r}, title={self.title!r}, description={self.description!r})"
