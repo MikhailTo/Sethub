@@ -94,3 +94,36 @@ async def create_user(user: user_schema.UserCreate) -> user_schema.User:
     # Cоздает новый словарь, содержащий все поля пользователя из Pydantic модели, 
     # а также добавляет к нему ID пользователя и информацию о токене. 
     # Это удобный способ подготовить полные данные пользователя для возврата из функции.
+
+#####################################
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+from sqlalchemy.orm import joinedload
+from backend.app.schemas.users import UserCreate
+from backend.app.models.users import User, UserToken
+
+async def create_user(database: AsyncSession, user: UserCreate) -> User:
+    database_user = User(
+        email=user.email,
+        name=user.name,
+        password=user.password
+    )
+    database.add(database_user)
+    await database.commit()
+    await database.refresh(database_user)
+    return database_user
+
+async def get_user_by_email(database: AsyncSession, email: str) -> User:
+    statement = select(User).where(User.email == email)
+    result = await database.execute(statement)
+    return result.scalars().first()
+
+async def get_user_by_token(database: AsyncSession, token: str) -> User:
+    statement = (select(UserToken)
+                 .where(UserToken.token == token)
+                 .options(joinedload(UserToken.token))
+    )
+
+    result = await database.execute(statement)
+    token = result.scalars().first()
+    return token.user

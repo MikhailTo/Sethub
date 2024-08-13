@@ -38,6 +38,9 @@ class User(Base):
         secondary="user_group_association",
     )
 
+    def __repr__(self):
+        return f"User(id={self.id}, name='{self.name}', email='{self.email}')"
+
 class UserKeys(Base):
     __tablename__ = "user_keys"
 
@@ -48,6 +51,9 @@ class UserKeys(Base):
 
     user: Mapped["User"] = relationship("User", back_populates="keys")
 
+    def __repr__(self):
+        return f"UserKeys(id={self.id}, user_id={self.user_id}, is_revoked={self.is_revoked})"
+    
 class UserToken(Base):
     __tablename__ = "user_tokens"
 
@@ -58,6 +64,9 @@ class UserToken(Base):
 
     user: Mapped["User"] = relationship("User", back_populates="tokens", lazy='joined')
 
+    def __repr__(self):
+        return f"UserToken(id={self.id}, user_id={self.user_id}, token='{self.token}', expires='{self.expires}')"
+    
 class UserGroup(Base):
     __tablename__ = "user_groups"
 
@@ -72,6 +81,8 @@ class UserGroup(Base):
         back_populates="user_group",
         cascade="all, delete-orphan",
     )
+    def __repr__(self):
+        return f"UserGroup(id={self.id}, name='{self.name}')"
 
 class UserGroupAssociation(Base):
     __tablename__ = "user_group_association"
@@ -79,3 +90,5 @@ class UserGroupAssociation(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     group_id: Mapped[int] = mapped_column(ForeignKey("user_groups.id"))
+    def __repr__(self):
+        return f"UserGroupAssociation(id={self.id}, user_id={self.user_id}, group_id={self.group_id})"
