@@ -24,8 +24,8 @@ https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#sqlalchemy.ext.asy
 https://docs.sqlalchemy.org/en/20/orm/session_api.html#sqlalchemy.orm.Session.__init__
 
 '''
-
-from typing import Dict, Any
+from contextlib import contextmanager
+from typing import Dict, Any, Iterator
 from sqlalchemy import URL
 from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine, create_async_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
@@ -63,25 +63,40 @@ class InitialDatabase():
         return sync_engine
 
     def __create_sync_session(self, sync_engine: AsyncEngine,
-                         sessionmaker_params: Dict[str, Any]) -> sessionmaker:
+                         sessionmaker_params: Dict[str, Any]) -> Iterator[AsyncSession]:
         """
-        Create a sync_session_local by sessionmaker for asynchronous database.
+        Create new database sync session.
+
+        Yields:
+            Database session.
         """
         sync_session_local = sessionmaker(
             **sessionmaker_params,
             class_= AsyncSession,
             bind=sync_engine,
         )
-        return sync_session_local
+        try:
+            yield sync_session_local
+            sync_session_local.commit()
+        except Exception:
+            sync_session_local.rollback()
+            raise
+        finally:
+            sync_session_local.close()
 
-    def make_sync_session(self) -> sessionmaker:
+
+    @contextmanager
+    def open_sync_session(self) -> Iterator[AsyncEngine]:
         """
-        Create and configure a session for database operations.
+        Create new database sync session with context manager.
+
+        Yields:
+            Database session.
         """
         url = self.__create_url(self.url_params)
         sync_engine = self.__create_sync_engine(url, self.engine_params)
-        sync_session_local = self.__create_sync_session(sync_engine, self.sessionmaker_params)
-        return sync_session_local
+        return self.__create_sync_session(sync_engine, self.sessionmaker_params)
+    
 
     def generate_base(self) -> Any:
         """
