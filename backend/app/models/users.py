@@ -5,7 +5,7 @@ from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy_utils import EmailType, PasswordType, UUIDType
 
-from backend.app.database.initial_database import Base
+from backend.app.database.base import Base
 from backend.app.models.posts import Post
 
 

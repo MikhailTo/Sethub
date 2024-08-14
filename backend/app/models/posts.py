@@ -1,9 +1,9 @@
 from datetime import datetime
-from sqlalchemy import Mapped, mapped_column, func
-from sqlalchemy import ForeignKey, String, Text
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import ForeignKey, String, Text, func
 from sqlalchemy.types import ARRAY
 
-from backend.app.database.initial_database import Base
+from backend.app.database.base import Base
 
 class Post(Base):
     __tablename__ = "posts"

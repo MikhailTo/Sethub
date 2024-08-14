@@ -11,9 +11,10 @@ Note:
     Ensure that sensitive information is properly secured and not exposed in the codebase.
 '''
 from typing import Dict
-from pydantic import BaseSettings, Field
 from pathlib import Path
-
+from pydantic_settings import BaseSettings
+from pydantic import Field
+import urllib.parse
 
 class DatabaseSettings(BaseSettings):
     DIALECT: str = Field("postgresql", env="DB_DIALECT")
@@ -30,7 +31,7 @@ class DatabaseSettings(BaseSettings):
         return {
             "drivername": f"{self.DIALECT}+{self.DRIVERNAME}",
             "username": self.USERNAME,
-            "password": self.PASSWORD,
+            "password": urllib.parse.quote_plus(self.PASSWORD),
             "host": self.HOST,
             "port": self.PORT,
             "database": self.NAME
