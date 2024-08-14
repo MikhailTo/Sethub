@@ -40,21 +40,9 @@ class InitialDatabase():
         """
         Initialize the InitialDatabase instance.
         """
-        self.settings: Any = settings
-        self.url_params: Dict[str, str] = {
-            "drivername":   f"{self.settings.DB_DIALECT}+{self.settings.DB_DRIVERNAME}",
-            "username":     self.settings.DB_USERNAME,
-            "password":     self.settings.DB_PASSWORD,
-            "host":         self.settings.DB_HOST,
-            "port":         self.settings.DB_PORT,
-            "database":     self.settings.DB_NAME
-        }
-        self.create_async_engine_params: Dict[str, bool] = {
-            "echo":         self.settings.DB_ECHO
-        }
-        self.sessionmaker_params: Dict[str, bool] = {
-            "expire_on_commit": self.settings.DB_EXPIRE_ON_COMMIT
-        }
+        self.url_params = settings.url_params
+        self.engine_params = settings.engine_params
+        self.sessionmaker_params = settings.sessionmaker_params
 
     def __create_url(self, url_params: Dict[str, str]) -> URL:
         """
@@ -64,13 +52,13 @@ class InitialDatabase():
         return url
 
     def __create_sync_engine(self, url: str,
-                        create_async_engine_params: Dict[str, bool]) -> AsyncEngine:
+                        engine_params: Dict[str, bool]) -> AsyncEngine:
         """
         Create an asynchronous SQLAlchemy engine.
         """
         sync_engine = create_async_engine(
             url,
-            **create_async_engine_params
+            **engine_params
             )
         return sync_engine
 
@@ -91,7 +79,7 @@ class InitialDatabase():
         Create and configure a session for database operations.
         """
         url = self.__create_url(self.url_params)
-        sync_engine = self.__create_sync_engine(url, self.create_async_engine_params)
+        sync_engine = self.__create_sync_engine(url, self.engine_params)
         sync_session_local = self.__create_sync_session(sync_engine, self.sessionmaker_params)
         return sync_session_local
 

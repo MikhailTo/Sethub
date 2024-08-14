@@ -10,7 +10,7 @@ Usage:
 Note:
     Ensure that sensitive information is properly secured and not exposed in the codebase.
 '''
-
+from typing import Dict
 from os import getenv as get
 from pathlib import Path
 
@@ -20,7 +20,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """Base settings class for the application."""
 
-    # Database settings
+    # Url params
     DB_DIALECT:             str     =   get("DB_DIALECT", "postgresql")
     DB_DRIVERNAME:          str     =   get("DB_DRIVERNAME", "asyncpg")
     DB_USERNAME:            str     =   get("DB_USERNAME", "postgres")
@@ -28,9 +28,34 @@ class Settings(BaseSettings):
     DB_HOST:                str     =   get("DB_HOST", "localhost")
     DB_PORT:                int     =   get("DB_PORT", "5432")
     DB_NAME:                str     =   get("DB_NAME", "db_sethub")
-    DB_ECHO:                bool    =   get("DB_ECHO", "True")
-    DB_EXPIRE_ON_COMMIT:    bool    =   get("DB_EXPIRE_ON_COMMIT", "False")
+    
+    url_params: Dict[str, str] = {
+            "drivername":   f"{DB_DIALECT}+{DB_DRIVERNAME}",
+            "username":     DB_USERNAME,
+            "password":     DB_PASSWORD,
+            "host":         DB_HOST,
+            "port":         DB_PORT,
+            "database":     DB_NAME
+    }
 
+    # Engine params
+    DB_ECHO:                bool    =   True
+    
+    engine_params:          Dict[str, bool] = {
+            "echo":         DB_ECHO
+    }
+    
+    # Sessionmaker params
+    AUTOCOMMIT:             bool    =   False
+    AUTOFLUSH:              bool    =   False
+    DB_EXPIRE_ON_COMMIT:    bool    =   False
+
+    sessionmaker_params: Dict[str, bool] = {
+            "autocommit": AUTOCOMMIT,
+            "autoflush": AUTOFLUSH,
+            "expire_on_commit": DB_EXPIRE_ON_COMMIT
+    }
+    
     # Folder names
     BACKEND_FOLDER_NAME:    Path    =   Path('backend')
     FRONTEND_FOLDER_NAME:   Path    =   Path('frontend')
