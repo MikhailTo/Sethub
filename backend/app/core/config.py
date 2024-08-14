@@ -11,66 +11,105 @@ Note:
     Ensure that sensitive information is properly secured and not exposed in the codebase.
 '''
 from typing import Dict
-from os import getenv as get
+from pydantic import BaseSettings, Field
 from pathlib import Path
 
-from pydantic_settings import BaseSettings
 
+class DatabaseSettings(BaseSettings):
+    DIALECT: str = Field("postgresql", env="DB_DIALECT")
+    DRIVERNAME: str = Field("asyncpg", env="DB_DRIVERNAME")
+    USERNAME: str = Field("postgres", env="DB_USERNAME")
+    PASSWORD: str = Field("postgres", env="DB_PASSWORD")
+    HOST: str = Field("localhost", env="DB_HOST")
+    PORT: int = Field(5432, env="DB_PORT")
+    NAME: str = Field("db_sethub", env="DB_NAME")
+    
+
+    @property
+    def params(self) -> Dict[str, str]:
+        return {
+            "drivername": f"{self.DIALECT}+{self.DRIVERNAME}",
+            "username": self.USERNAME,
+            "password": self.PASSWORD,
+            "host": self.HOST,
+            "port": self.PORT,
+            "database": self.NAME
+        }
+
+class EngineSettings(BaseSettings):
+    ECHO: bool = True
+
+    @property
+    def params(self) -> Dict[str, bool]:
+        return {"echo": self.ECHO}
+    
+class SessionSettings(BaseSettings):
+    AUTOCOMMIT: bool = False
+    AUTOFLUSH: bool = False
+    EXPIRE_ON_COMMIT: bool = False
+
+    @property
+    def params(self) -> Dict[str, bool]:
+        return {
+            "autocommit": self.AUTOCOMMIT,
+            "autoflush": self.AUTOFLUSH,
+            "expire_on_commit": self.EXPIRE_ON_COMMIT
+        }
+
+class PathSettings(BaseSettings):
+
+    ENV_PRODUCTION_FILE: Path = Path('.env')
+    ENV_DEVELOPMENT_FILE: Path = Path('.env.dev')
+    ENV_TEST_FILE: Path = Path('.env.test')
+
+    BACKEND_FOLDER: Path = Path('backend')
+    FRONTEND_FOLDER: Path = Path('frontend')
+    APP_FOLDER: Path = Path('app')
+    MEDIA_FOLDER: Path = Path('media')
+    STATIC_FOLDER: Path = Path('static')
+    TEMPLATES_FOLDER: Path = Path('templates')
+    
+    @property
+    def ENV_PATH(self, ENV_FILE) -> Path:
+        return self.MAIN_PATH / ENV_FILE
+    
+    @property
+    def MAIN_PATH(self) -> Path:
+        return Path(__file__).resolve().parents[3]
+
+    @property
+    def BACKEND_PATH(self) -> Path:
+        return self.MAIN_PATH / self.BACKEND_FOLDER
+
+    @property
+    def FRONTEND_PATH(self) -> Path:
+        return self.MAIN_PATH / self.FRONTEND_FOLDER
+
+    @property
+    def APP_PATH(self) -> Path:
+        return self.BACKEND_PATH / self.APP_FOLDER
+
+    @property
+    def MEDIA_PATH(self) -> Path:
+        return self.FRONTEND_PATH / self.MEDIA_FOLDER
+
+    @property
+    def STATIC_PATH(self) -> Path:
+        return self.FRONTEND_PATH / self.STATIC_FOLDER
+
+    @property
+    def TEMPLATES_PATH(self) -> Path:
+        return self.FRONTEND_PATH / self.TEMPLATES_FOLDER
 
 class Settings(BaseSettings):
-    """Base settings class for the application."""
+    db: DatabaseSettings = DatabaseSettings()
+    engine: EngineSettings = EngineSettings()
+    session: SessionSettings = SessionSettings()
+    paths: PathSettings = PathSettings()
 
-    # Url params
-    DB_DIALECT:             str     =   get("DB_DIALECT", "postgresql")
-    DB_DRIVERNAME:          str     =   get("DB_DRIVERNAME", "asyncpg")
-    DB_USERNAME:            str     =   get("DB_USERNAME", "postgres")
-    DB_PASSWORD:            str     =   get("DB_PASSWORD", "postgres")
-    DB_HOST:                str     =   get("DB_HOST", "localhost")
-    DB_PORT:                int     =   get("DB_PORT", "5432")
-    DB_NAME:                str     =   get("DB_NAME", "db_sethub")
-    
-    url_params: Dict[str, str] = {
-            "drivername":   f"{DB_DIALECT}+{DB_DRIVERNAME}",
-            "username":     DB_USERNAME,
-            "password":     DB_PASSWORD,
-            "host":         DB_HOST,
-            "port":         DB_PORT,
-            "database":     DB_NAME
-    }
-
-    # Engine params
-    DB_ECHO:                bool    =   True
-    
-    engine_params:          Dict[str, bool] = {
-            "echo":         DB_ECHO
-    }
-    
-    # Sessionmaker params
-    AUTOCOMMIT:             bool    =   False
-    AUTOFLUSH:              bool    =   False
-    DB_EXPIRE_ON_COMMIT:    bool    =   False
-
-    sessionmaker_params: Dict[str, bool] = {
-            "autocommit": AUTOCOMMIT,
-            "autoflush": AUTOFLUSH,
-            "expire_on_commit": DB_EXPIRE_ON_COMMIT
-    }
-    
-    # Folder names
-    BACKEND_FOLDER_NAME:    Path    =   Path('backend')
-    FRONTEND_FOLDER_NAME:   Path    =   Path('frontend')
-    APP_FOLDER_NAME:        Path    =   Path('app')
-    MEDIA_FOLDER_NAME:      Path    =   Path('media')
-    STATIC_FOLDER_NAME:     Path    =   Path('static')
-    TEMPLATES_FOLDER_NAME:  Path    =   Path('templates')
-
-    # Paths
-    MAIN_PATH:              Path    =   Path(__file__).resolve().parents[3]
-    BACKEND_PATH:           Path    =   MAIN_PATH / BACKEND_FOLDER_NAME
-    FRONTEND_PATH:          Path    =   MAIN_PATH / FRONTEND_FOLDER_NAME
-    APP_PATH:               Path    =   BACKEND_PATH / APP_FOLDER_NAME
-    MEDIA_PATH:             Path    =   FRONTEND_PATH / MEDIA_FOLDER_NAME
-    STATIC_PATH:            Path    =   FRONTEND_PATH / STATIC_FOLDER_NAME
-    TEMPLATES_PATH:         Path    =   FRONTEND_PATH / TEMPLATES_FOLDER_NAME
+    class Config:
+        paths: PathSettings = PathSettings()
+        env_file =  paths.ENV_PATH(paths.ENV_DEVELOPMENT_FILE)
+        env_file_encoding = "utf-8"
 
 settings = Settings()

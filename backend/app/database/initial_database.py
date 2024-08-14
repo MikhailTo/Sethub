@@ -9,7 +9,7 @@ Usage:
 
     init_db = InitialDatabase(settings)
 
-    SyncSessionLocal = init_db.make_sync_session() # or init_db.make_session()
+    SyncSessionLocal = init_db.open_sync_session()
 
     Base = init_db.generate_base()
 
@@ -40,9 +40,9 @@ class InitialDatabase():
         """
         Initialize the InitialDatabase instance.
         """
-        self.url_params = settings.url_params
-        self.engine_params = settings.engine_params
-        self.sessionmaker_params = settings.sessionmaker_params
+        self.url_params = settings.db.params
+        self.engine_params = settings.engine.params
+        self.sessionmaker_params = settings.session.params
 
     def __create_url(self, url_params: Dict[str, str]) -> URL:
         """
