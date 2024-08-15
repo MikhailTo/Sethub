@@ -1,12 +1,19 @@
 from fastapi import Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
 
+from jose import jwt
 from sqlalchemy import select
 from passlib.context import CryptContext
 
-from backend.app.schemas.auth import UserSchema
+from backend.app.schemas.auth import UserSchema, CreateUserSchema, TokenSchema
 from backend.app.services.base import BaseService, BaseDataManager
-from backend.app.database.models import UserModel
+from backend.app.models.auth import UserModel
+from backend.app.utils.exc import raise_with_log
+from backend.app.const import (
+    TOKEN_TYPE,
+    TOKEN_ALGORITHM
+)
+from backend.app.core.config import settings
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -27,10 +34,39 @@ class HashingMixin:
     
 class AuthService(HashingMixin, BaseService):
 
+    def create_user(self, user: CreateUserSchema) -> None:
+        
+        user_model = UserModel(
+            name=user.name,
+            email=user.email,
+            hashed_password=self.bcrypt(user.password)
+        )
+        AuthDataManager(self.session).add_user(user_model)
+        
     def authenticate(
             self, login: OAuth2PasswordRequestForm = Depends()
     ):
         user = AuthDataManager(self.session).get_user(login.username)
+
+        if user.hashed_password is None:
+            raise_with_log(status.HTTP_401_UNAUTHORIZED, "Incorrect password")
+        else:
+            if not self.verify(user.hashed_password, login.password):
+                raise_with_log(status.HTTP_401_UNAUTHORIZED, "Incorrect password")
+            else:
+                access_token = self._create_access_token(user.name, user.email)
+                return TokenSchema(access_token=access_token, token_type=TOKEN_TYPE)
+        return None
+    
+    def _create_access_token(self, name: str, email: str) -> str:
+        
+        payload = {
+            "name": name,
+            "sub": email,
+            "expires_at": self._expiration_time()
+        }
+        
+        return jwt.encode(payload, settings.token_key, algorithm=TOKEN_ALGORITHM)
 
 class AuthDataManager(BaseDataManager):
     def add_user(self, user: UserModel) -> None:

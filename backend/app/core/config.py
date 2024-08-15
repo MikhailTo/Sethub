@@ -17,6 +17,8 @@ from pydantic import Field
 import urllib.parse
 
 class DatabaseSettings(BaseSettings):
+    
+    
     DIALECT: str = Field("postgresql", env="DB_DIALECT")
     DRIVERNAME: str = Field("asyncpg", env="DB_DRIVERNAME")
     USERNAME: str = Field("postgres", env="DB_USERNAME")
@@ -38,6 +40,8 @@ class DatabaseSettings(BaseSettings):
         }
 
 class EngineSettings(BaseSettings):
+    
+    
     ECHO: bool = True
 
     @property
@@ -45,6 +49,8 @@ class EngineSettings(BaseSettings):
         return {"echo": self.ECHO}
     
 class SessionSettings(BaseSettings):
+    
+    
     AUTOCOMMIT: bool = False
     AUTOFLUSH: bool = False
     EXPIRE_ON_COMMIT: bool = False
@@ -58,6 +64,7 @@ class SessionSettings(BaseSettings):
         }
 
 class PathSettings(BaseSettings):
+    
 
     ENV_PRODUCTION_FILE: Path = Path('.env')
     ENV_DEVELOPMENT_FILE: Path = Path('.env.dev')
@@ -103,12 +110,18 @@ class PathSettings(BaseSettings):
         return self.FRONTEND_PATH / self.TEMPLATES_FOLDER
 
 class Settings(BaseSettings):
+    
+    
     db: DatabaseSettings = DatabaseSettings()
     engine: EngineSettings = EngineSettings()
     session: SessionSettings = SessionSettings()
     paths: PathSettings = PathSettings()
 
+    token_key: str = Field("", env="TOKEN_KEY")
+    
     class Config:
+        
+        
         paths: PathSettings = PathSettings()
         env_file =  paths.ENV_PATH(paths.ENV_DEVELOPMENT_FILE)
         env_file_encoding = "utf-8"

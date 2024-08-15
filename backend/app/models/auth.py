@@ -2,7 +2,7 @@ from typing import List
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.app.models.base import SQLModel
-from backend.app.models.posts import Post
+from backend.app.models.posts import PostModel
 
 class UserModel(SQLModel):
     __tablename__ = "users"
@@ -12,7 +12,7 @@ class UserModel(SQLModel):
     name: Mapped[str] = mapped_column("name")
     hashed_password: Mapped[str] = mapped_column("hashed_password")
 
-    posts: Mapped[List["Post"]] = relationship(
+    posts: Mapped[List["PostModel"]] = relationship(
         default_factory=list,
         back_populates="author",
         lazy='joined',

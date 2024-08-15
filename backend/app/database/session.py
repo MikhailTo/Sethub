@@ -19,11 +19,12 @@ from sqlalchemy import URL
 from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
+from backend.app.core.config import settings
 class DatabaseSession():
     """
     A class to initialize and set up the database connection and ORM components.
     """
-    def __init__(self, settings: Any) -> None:
+    def __init__(self, settings: Any = settings) -> None:
         """
         Initialize the InitialDatabase instance.
         """
