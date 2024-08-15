@@ -76,7 +76,7 @@ class AuthService(HashingMixin, BaseService):
     def _expiration_time() -> str:
         """Get token expiration time."""
 
-        expires_at = datetime.now(datetime.UTC) + timedelta(minutes=TOKEN_EXPIRE_MINUTES)
+        expires_at = datetime.now(datetime.datetime.UTC) + timedelta(minutes=TOKEN_EXPIRE_MINUTES)
         return expires_at.strftime("%Y-%m-%d %H:%M:%S")
     
 class AuthDataManager(BaseDataManager):
