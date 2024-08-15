@@ -1,3 +1,6 @@
+from datetime import datetime, timedelta
+
+
 from fastapi import Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -11,7 +14,8 @@ from backend.app.models.auth import UserModel
 from backend.app.utils.exc import raise_with_log
 from backend.app.const import (
     TOKEN_TYPE,
-    TOKEN_ALGORITHM
+    TOKEN_ALGORITHM,
+    TOKEN_EXPIRE_MINUTES
 )
 from backend.app.core.config import settings
 
@@ -67,7 +71,14 @@ class AuthService(HashingMixin, BaseService):
         }
         
         return jwt.encode(payload, settings.token_key, algorithm=TOKEN_ALGORITHM)
+    
+    @staticmethod
+    def _expiration_time() -> str:
+        """Get token expiration time."""
 
+        expires_at = datetime.now(datetime.UTC) + timedelta(minutes=TOKEN_EXPIRE_MINUTES)
+        return expires_at.strftime("%Y-%m-%d %H:%M:%S")
+    
 class AuthDataManager(BaseDataManager):
     def add_user(self, user: UserModel) -> None:
         """Add user to tadabase."""

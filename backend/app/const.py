@@ -1,4 +1,5 @@
-from typing import Final, List, Enum, Dict, Any
+from enum import Enum
+from typing import Final, List, Dict, Any
 from backend.app.version import __version__
 
 # Application params
@@ -29,3 +30,7 @@ auth_params:   Final[Dict[str, Any]] = {
     "prefix": "/" + AUTH_URL, 
     "tags": AUTH_TAGS
     }
+
+TOKEN_TYPE: Final = "bearer"
+TOKEN_ALGORITHM: Final = "HS256"
+TOKEN_EXPIRE_MINUTES: Final = 60
