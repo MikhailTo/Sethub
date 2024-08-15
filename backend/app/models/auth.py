@@ -4,7 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from backend.app.models.base import SQLModel
 from backend.app.models.posts import Post
 
-class User(SQLModel):
+class UserModel(SQLModel):
     __tablename__ = "users"
     
     id: Mapped[int] = mapped_column("id", primary_key=True, index=True)

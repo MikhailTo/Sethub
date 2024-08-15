@@ -5,7 +5,7 @@ from sqlalchemy.types import ARRAY
 
 from backend.app.models.base import SQLModel
 
-class Post(SQLModel):
+class PostModel(SQLModel):
     __tablename__ = "posts"
 
     id: Mapped[int] = mapped_column("id", primary_key=True, index=True)
