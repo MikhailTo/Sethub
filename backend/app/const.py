@@ -1,4 +1,4 @@
-from typing import Final, Dict, Any
+from typing import Final, List, Enum, Dict, Any
 from backend.app.version import __version__
 
 # Application params
@@ -21,3 +21,11 @@ uvicorn_params:   Final[Dict[str, Any]] = {
     "port": PORT
     }
 
+# Authentication service constants
+AUTH_TAGS: Final[List[str | Enum] | None] = ["Authentication"]
+AUTH_URL: Final = "token"
+
+auth_params:   Final[Dict[str, Any]] = {
+    "prefix": "/" + AUTH_URL, 
+    "tags": AUTH_TAGS
+    }
