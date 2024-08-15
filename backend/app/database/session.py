@@ -2,14 +2,6 @@
 This module provides functionality for initializing and setting up database connections
 and ORM components using SQLAlchemy with asynchronous support.
 
-Usage:
-
-    from backend.app.core.config import settings
-    from backend.app.database.session import DatabaseSession
-
-    AsyncSessionLocal: Iterator[AsyncEngine] = DatabaseSession(settings).open_async_session()
-
-
 Note:
  - url_params
 https://docs.sqlalchemy.org/en/20/core/engines.html#sqlalchemy.engine.URL.create
@@ -59,28 +51,51 @@ class DatabaseSession():
         async_engine = create_async_engine(url, **engine_params)
 
         return async_engine
+    
+    def __create_async_session_factory(self, async_engine: AsyncEngine, sessionmaker_params: Dict[str, Any]) -> AsyncSession:
+        """
+        Create a configured session factory.
+        """
+        async_session_factory = sessionmaker(
+            **sessionmaker_params,
+            class_= AsyncSession,
+            bind=async_engine,
+        )
+        return async_session_factory
+    
 
+    def __precreate_async_session(self) -> AsyncSession:
 
-    def __create_async_session(self, async_engine: AsyncEngine,
-                         sessionmaker_params: Dict[str, Any]) -> Iterator[AsyncSession]:
+        """
+            Precreate an asynchronous session for database operations.
+
+            This method creates a URL, an asynchronous engine, and an asynchronous session factory.
+            It then returns the created session.
+
+            Returns:
+            AsyncSession: An asynchronous session object ready for database operations.
+        """
+
+        url = self.__create_url(self.url_params)
+ 
+        async_engine = self.__create_async_engine(url, self.engine_params)
+
+        session = self.__create_async_session_factory(async_engine, self.sessionmaker_params)
+
+        return session
+        
+    def create_async_session(self) -> Iterator[AsyncSession]:
         """
         Create new database async session.
 
         Yields:
             Database session.
         """
-        async_session_local = sessionmaker(
-            **sessionmaker_params,
-            class_= AsyncSession,
-            bind=async_engine,
-        )
-        
         # This pattern ensures that database transactions are handled safely:
         #   - Changes are committed only if everything succeeds
         #   - Changes are rolled back if an error occurs
         #   - The session is properly managed and cleaned up in all scenarios
-
-        session = async_session_local()
+        session = self.__precreate_async_session()
 
         try:
             yield session
@@ -104,8 +119,4 @@ class DatabaseSession():
         Yields:
             Database session.
         """
-        url = self.__create_url(self.url_params)
- 
-        async_engine = self.__create_async_engine(url, self.engine_params)
- 
-        return self.__create_async_session(async_engine, self.sessionmaker_params)
+        return self.create_async_session()
