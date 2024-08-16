@@ -1,10 +1,12 @@
+#TODO: install jose
+
 from datetime import datetime, timedelta
 
 
 from fastapi import Depends, status
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 
-from jose import jwt
+from jose import jwt, JWTError
 from sqlalchemy import select
 from passlib.context import CryptContext
 
@@ -13,11 +15,14 @@ from backend.app.services.base import BaseService, BaseDataManager
 from backend.app.models.auth import UserModel
 from backend.app.utils.exc import raise_with_log
 from backend.app.const import (
+    AUTH_URL,
     TOKEN_TYPE,
     TOKEN_ALGORITHM,
     TOKEN_EXPIRE_MINUTES
 )
 from backend.app.core.config import settings
+
+oauth2_schema = OAuth2PasswordBearer(tokenUrl=AUTH_URL, auto_error=False)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -96,3 +101,49 @@ class AuthDataManager(BaseDataManager):
             email=model.email,
             hashed_password=model.hashed_password
         )
+
+
+async def get_current_user(token: str = Depends(oauth2_schema)) -> UserSchema | None:
+    """Decode token to obtain user information.
+
+    Extracts user information from token and verifies expiration time.
+    If token is valid then instance of :class:`~app.schemas.auth.UserSchema`
+    is returned, otherwise exception is raised.
+
+    Args:
+        token:
+            The token to verify.
+
+    Returns:
+        Decoded user dictionary.
+    """
+
+    if token is None:
+        raise_with_log(status.HTTP_401_UNAUTHORIZED, "Invalid token")
+
+    try:
+        # decode token using secret token key provided by config
+        payload = jwt.decode(token, settings.token_key, algorithms=[TOKEN_ALGORITHM])
+
+        # extract encoded information
+        name: str = payload.get("name")
+        sub: str = payload.get("sub")
+        expires_at: str = payload.get("expires_at")
+
+        if sub is None:
+            raise_with_log(status.HTTP_401_UNAUTHORIZED, "Invalid credentials")
+
+        if is_expired(expires_at):
+            raise_with_log(status.HTTP_401_UNAUTHORIZED, "Token expired")
+
+        return UserSchema(name=name, email=sub)
+    except JWTError:
+        raise_with_log(status.HTTP_401_UNAUTHORIZED, "Invalid credentials")
+
+    return None
+
+
+def is_expired(expires_at: str) -> bool:
+    """Return :obj:`True` if token has expired."""
+
+    return datetime.strptime(expires_at, "%Y-%m-%d %H:%M:%S") < datetime.utcnow()

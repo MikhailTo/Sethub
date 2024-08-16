@@ -15,5 +15,13 @@ async def authenticate(
     login: OAuth2PasswordRequestForm = Depends(),
     session: AsyncSession = Depends(DatabaseSession().create_async_session)
     ) -> TokenSchema | None:
-    
+    """User authentication.
+
+    Raises:
+        HTTPException: 401 Unauthorized
+        HTTPException: 404 Not Found
+
+    Returns:
+        Access token.
+    """
     return AuthService(session).authenticate(login)
