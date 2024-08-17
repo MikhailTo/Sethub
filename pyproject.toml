@@ -16,6 +16,7 @@ asyncpg = "^0.29.0"
 sqlalchemy-utils = "^0.41.2"
 loguru = "^0.7.2"
 passlib = "^1.7.4"
+wheel = "^0.44.0"
 
 
 [build-system]

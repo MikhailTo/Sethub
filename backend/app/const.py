@@ -31,6 +31,16 @@ auth_params:   Final[Dict[str, Any]] = {
     "tags": AUTH_TAGS
     }
 
+# Posts service constants
+POST_TAGS: Final[List[str | Enum] | None] = ["Posts"]
+POST_URL: Final = "posts"
+
+post_params:   Final[Dict[str, Any]] = {
+    "prefix": "/" + POST_URL, 
+    "tags": POST_TAGS
+    }
+
+
 # Token constants
 TOKEN_TYPE: Final = "bearer"
 TOKEN_ALGORITHM: Final = "HS256"
