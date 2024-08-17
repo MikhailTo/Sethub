@@ -1,13 +1,12 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter, Request, Depends
 from fastapi.staticfiles import StaticFiles
-from fastapi import APIRouter
-from fastapi import Request
 from fastapi.responses import HTMLResponse
-
 from fastapi.templating import Jinja2Templates
+from sqlalchemy.ext.asyncio import AsyncSession
 
-# from backend.app.utils import posts as post_utils
-from backend.app.data.posts import Posts as local_posts
+from backend.app.database.session import DatabaseSession
+from backend.app.services.posts import PostService
+# from backend.app.data.posts import Posts as local_posts
 from backend.app.core.config import settings
 
 router = APIRouter()
@@ -18,9 +17,11 @@ templates = Jinja2Templates(directory=settings.TEMPLATES_FOLDER)
 
 
 @router.get("/", response_class=HTMLResponse)
-async def homepage(request: Request):
-    # posts = await post_utils.get_posts()
-    posts = local_posts.posts
+async def homepage(
+    request: Request,
+    session: AsyncSession = Depends(DatabaseSession().create_async_session)):
+    posts = PostService(session).get_posts()
+    # posts = local_posts.posts
     context = {
         "title": "Sethub",
         "posts": posts
@@ -62,7 +63,7 @@ async def about(request: Request):
     }
     return templates.TemplateResponse(
         request=request,
-        name = "about.html", 
+        name = "about.html",
         context=context)
     
 @router.get("/auth", response_class=HTMLResponse)
@@ -72,5 +73,5 @@ async def auth(request: Request):
     }
     return templates.TemplateResponse(
         request=request,
-        name = "auth.html", 
+        name = "auth.html",
         context=context)
