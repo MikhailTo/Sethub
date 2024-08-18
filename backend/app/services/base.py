@@ -2,7 +2,7 @@ from typing import Any, Sequence, List, Type
 from sqlalchemy.sql.expression import Executable
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
-from backend.app.models.base import SQLModel
+from app.models.base import SQLModel
 
 class SessionMixin:
     """Provides instance of database session."""
@@ -24,8 +24,8 @@ class BaseDataManager(SessionMixin):
     def get_one(self, select_statement: Executable) -> Any:
         return self.session.scalar(select_statement)
     
-    def get_all(self, select_stmt: Executable) -> List[Any]:
-        return list(self.session.scalars(select_stmt).all())
+    def get_all(self, select_statement: Executable) -> List[Any]:
+        return list(self.session.scalars(select_statement).all())
 
     def get_from_tvf(self, model: Type[SQLModel], *args: Any) -> List[Any]:
         """Query from table valued function.

@@ -7,5 +7,6 @@ htmlcov
 .cache
 .venv
 .env
+.env.dev
 db
 .vscode

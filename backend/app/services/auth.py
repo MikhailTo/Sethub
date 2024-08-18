@@ -8,17 +8,17 @@ from jwt import encode, decode, PyJWTError
 from sqlalchemy import select
 from passlib.context import CryptContext
 
-from backend.app.schemas.auth import UserSchema, CreateUserSchema, TokenSchema
-from backend.app.services.base import BaseService, BaseDataManager
-from backend.app.models.auth import UserModel
-from backend.app.utils.exc import raise_with_log
-from backend.app.const import (
+from app.schemas.auth import UserSchema, CreateUserSchema, TokenSchema
+from app.services.base import BaseService, BaseDataManager
+from app.models.auth import UserModel
+from app.utils.exc import raise_with_log
+from app.const import (
     AUTH_URL,
     TOKEN_TYPE,
     TOKEN_ALGORITHM,
     TOKEN_EXPIRE_MINUTES
 )
-from backend.app.core.config import settings
+from app.core.config import settings
 
 oauth2_schema = OAuth2PasswordBearer(tokenUrl=AUTH_URL, auto_error=False)
 
@@ -73,8 +73,8 @@ class AuthService(HashingMixin, BaseService):
             "expires_at": self._expiration_time()
         }
         
-        return encode(payload=payload, 
-                      key=settings.token_key, 
+        return encode(payload=payload,
+                      key=settings.token_key,
                       algorithm=TOKEN_ALGORITHM)
     
     @staticmethod
@@ -123,8 +123,8 @@ async def get_current_user(token: str = Depends(oauth2_schema)) -> UserSchema | 
 
     try:
         # decode token using secret token key provided by config
-        payload = decode(jwt=token, 
-                         key=settings.token_key, 
+        payload = decode(jwt=token,
+                         key=settings.token_key,
                          algorithms=[TOKEN_ALGORITHM])
 
         # extract encoded information

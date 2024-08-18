@@ -1,4 +1,4 @@
-from backend.app.schemas.base import BaseSchema
+from app.schemas.base import BaseSchema
 
 
 class CreateUserSchema(BaseSchema):

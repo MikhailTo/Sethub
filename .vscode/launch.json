@@ -10,10 +10,11 @@
             "request": "launch",
             "module": "uvicorn",
             "args": [
-                "backend.app.main:app",
+                "app.main:app",
                 "--reload"
             ],
-            "jinja": true
+            "jinja": true,
+            "cwd": "${workspaceFolder}/backend"
         }
     ]
 }

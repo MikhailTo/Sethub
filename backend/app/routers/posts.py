@@ -2,13 +2,13 @@ from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.app.const import post_params
-from backend.app.database.session import DatabaseSession
+from app.const import post_params
+from app.database.session import DatabaseSession
 
-from backend.app.schemas.auth import UserSchema
-from backend.app.schemas.posts import PostSchema
-from backend.app.services.auth import get_current_user
-from backend.app.services.posts import PostService
+from app.schemas.auth import UserSchema
+from app.schemas.posts import PostSchema
+from app.services.auth import get_current_user
+from app.services.posts import PostService
 
 router = APIRouter(**post_params)
 

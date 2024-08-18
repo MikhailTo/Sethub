@@ -16,10 +16,10 @@ https://docs.sqlalchemy.org/en/20/orm/session_api.html#sqlalchemy.orm.Session.__
 from contextlib import contextmanager
 from typing import Dict, Any, Iterator
 from sqlalchemy import URL
-from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine, create_async_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine, async_sessionmaker, create_async_engine
+# from sqlalchemy.orm import sessionmaker
 
-from backend.app.core.config import settings
+from app.core.config import settings
 class DatabaseSession():
     """
     A class to initialize and set up the database connection and ORM components.
@@ -40,7 +40,7 @@ class DatabaseSession():
         Create a SQLAlchemy URL object for database connection.
         """
         url = URL.create(**url_params)
-
+        
         return url
 
 
@@ -50,16 +50,16 @@ class DatabaseSession():
         Create an asynchronous SQLAlchemy engine.
         """
         async_engine = create_async_engine(url, **engine_params)
-
+        
         return async_engine
     
     def __create_async_session_factory(self, async_engine: AsyncEngine, sessionmaker_params: Dict[str, Any]) -> AsyncSession:
         """
         Create a configured session factory.
         """
-        async_session_factory = sessionmaker(
+        async_session_factory = async_sessionmaker(
             **sessionmaker_params,
-            class_= AsyncSession,
+            class_=AsyncSession,
             bind=async_engine,
         )
         return async_session_factory
@@ -78,7 +78,7 @@ class DatabaseSession():
         """
 
         url = self.__create_url(self.url_params)
- 
+
         async_engine = self.__create_async_engine(url, self.engine_params)
 
         session = self.__create_async_session_factory(async_engine, self.sessionmaker_params)
@@ -98,20 +98,16 @@ class DatabaseSession():
         #   - The session is properly managed and cleaned up in all scenarios
         session = self.__precreate_async_session()
 
-        try:
-            yield session
-
-            session.commit()
-
-        except Exception:
-            session.rollback()
+        yield session
+        # try:
+        #     yield session
+        #     session.commit()
+        # except Exception:
+        #     session.rollback()
+        #     raise
+        # finally:
+        #     session.close()
             
-            raise
-
-        finally:
-            session.close()
-
-
     @contextmanager
     def open_async_session(self) -> Iterator[AsyncEngine]:
         """

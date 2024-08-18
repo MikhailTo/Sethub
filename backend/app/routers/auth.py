@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.app.const import auth_params
-from backend.app.database.session import DatabaseSession
+from app.const import auth_params
+from app.database.session import DatabaseSession
 
-from backend.app.schemas.auth import TokenSchema
-from backend.app.services.auth import AuthService
+from app.schemas.auth import TokenSchema
+from app.services.auth import AuthService
 
 router = APIRouter(**auth_params)
 

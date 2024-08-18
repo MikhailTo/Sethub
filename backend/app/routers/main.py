@@ -1,27 +1,32 @@
-from fastapi import FastAPI, APIRouter, Request, Depends
+from fastapi import FastAPI, APIRouter, Request, Depends, Query
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.app.database.session import DatabaseSession
-from backend.app.services.posts import PostService
-# from backend.app.data.posts import Posts as local_posts
-from backend.app.core.config import settings
+from app.database.session import DatabaseSession
+from app.services.posts import PostService
+from app.data.posts import Posts as local_posts
+from app.core.config import settings
 
 router = APIRouter()
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory=settings.STATIC_FOLDER), name="static")
-templates = Jinja2Templates(directory=settings.TEMPLATES_FOLDER)
+app.mount("/static", StaticFiles(directory=settings.paths.STATIC_PATH), name="static")
+templates = Jinja2Templates(directory=settings.paths.TEMPLATES_PATH)
 
+url_params = settings.db.params
+print(url_params)
 
 @router.get("/", response_class=HTMLResponse)
 async def homepage(
     request: Request,
-    session: AsyncSession = Depends(DatabaseSession().create_async_session)):
-    posts = PostService(session).get_posts()
-    # posts = local_posts.posts
+    # session: AsyncSession = Depends(next(DatabaseSession().create_async_session()))
+    # session: AsyncSession = Depends(DatabaseSession().open_async_session)
+    ):
+    # with session_maker() as session:
+    # posts = await PostService(session).get_posts()
+    posts = local_posts.posts
     context = {
         "title": "Sethub",
         "posts": posts

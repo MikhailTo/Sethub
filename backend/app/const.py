@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Final, List, Dict, Any
-from backend.app.version import __version__
+from app.version import __version__
 
 # Application params
 APP_TITLE: Final[str] = "Sethub"

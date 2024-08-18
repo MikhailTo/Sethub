@@ -1,8 +1,8 @@
 from typing import List
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.app.models.base import SQLModel
-from backend.app.models.posts import PostModel
+from app.models.base import SQLModel
+from app.models.posts import PostModel
 
 class UserModel(SQLModel):
     __tablename__ = "users"
@@ -13,7 +13,7 @@ class UserModel(SQLModel):
     hashed_password: Mapped[str] = mapped_column("hashed_password")
 
     posts: Mapped[List["PostModel"]] = relationship(
-        default_factory=list,
+        # default_factory=list,
         back_populates="author",
         lazy='joined',
         cascade="all, delete-orphan",

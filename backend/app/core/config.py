@@ -15,28 +15,26 @@ from pathlib import Path
 from pydantic_settings import BaseSettings
 from pydantic import Field
 import urllib.parse
-
+from os import getenv as get
 class DatabaseSettings(BaseSettings):
     
+    DB_DIALECT:             str     =   get("DB_DIALECT", "postgresql")
+    DB_DRIVERNAME:          str     =   get("DB_DRIVERNAME", "asyncpg")
+    DB_USERNAME:            str     =   get("DB_USERNAME", "postgres")
+    DB_PASSWORD:            str     =   get("DB_PASSWORD", "postgres")
+    DB_HOST:                str     =   get("DB_HOST", "localhost")
+    DB_PORT:                int     =   get("DB_PORT", "5432")
+    DB_NAME:                str     =   get("DB_NAME", "db_sethub")
     
-    DIALECT: str = Field("postgresql", env="DB_DIALECT")
-    DRIVERNAME: str = Field("asyncpg", env="DB_DRIVERNAME")
-    USERNAME: str = Field("postgres", env="DB_USERNAME")
-    PASSWORD: str = Field("postgres", env="DB_PASSWORD")
-    HOST: str = Field("localhost", env="DB_HOST")
-    PORT: int = Field(5432, env="DB_PORT")
-    NAME: str = Field("db_sethub", env="DB_NAME")
-    
-
     @property
     def params(self) -> Dict[str, str]:
         return {
-            "drivername": f"{self.DIALECT}+{self.DRIVERNAME}",
-            "username": self.USERNAME,
-            "password": urllib.parse.quote_plus(self.PASSWORD),
-            "host": self.HOST,
-            "port": self.PORT,
-            "database": self.NAME
+            "drivername": f"{self.DB_DIALECT}+{self.DB_DRIVERNAME}",
+            "username": self.DB_USERNAME,
+            "password": urllib.parse.quote_plus(self.DB_PASSWORD),
+            "host": self.DB_HOST,
+            "port": self.DB_PORT,
+            "database": self.DB_NAME
         }
 
 class EngineSettings(BaseSettings):
@@ -70,6 +68,22 @@ class PathSettings(BaseSettings):
     ENV_DEVELOPMENT_FILE: Path = Path('.env.dev')
     ENV_TEST_FILE: Path = Path('.env.test')
 
+    #  # Folder names
+    # BACKEND_FOLDER_NAME:    Path    =   Path('backend')
+    # FRONTEND_FOLDER_NAME:   Path    =   Path('frontend')
+    # APP_FOLDER_NAME:        Path    =   Path('app')
+    # MEDIA_FOLDER_NAME:      Path    =   Path('media')
+    # STATIC_FOLDER_NAME:     Path    =   Path('static')
+    # TEMPLATES_FOLDER_NAME:  Path    =   Path('templates')
+
+    # # Paths
+    # MAIN_PATH:              Path    =   Path(__file__).resolve().parents[3]
+    # BACKEND_PATH:           Path    =   MAIN_PATH / BACKEND_FOLDER_NAME
+    # FRONTEND_PATH:          Path    =   MAIN_PATH / FRONTEND_FOLDER_NAME
+    # APP_PATH:               Path    =   BACKEND_PATH / APP_FOLDER_NAME
+    # MEDIA_PATH:             Path    =   FRONTEND_PATH / MEDIA_FOLDER_NAME
+    # STATIC_PATH:            Path    =   FRONTEND_PATH / STATIC_FOLDER_NAME
+    # TEMPLATES_PATH:         Path    =   FRONTEND_PATH / TEMPLATES_FOLDER_NAME
     BACKEND_FOLDER: Path = Path('backend')
     FRONTEND_FOLDER: Path = Path('frontend')
     APP_FOLDER: Path = Path('app')
@@ -78,8 +92,8 @@ class PathSettings(BaseSettings):
     TEMPLATES_FOLDER: Path = Path('templates')
     
     @property
-    def ENV_PATH(self, ENV_FILE) -> Path:
-        return self.MAIN_PATH / ENV_FILE
+    def ENV_PATH(self) -> Path:
+        return self.MAIN_PATH
     
     @property
     def MAIN_PATH(self) -> Path:
@@ -117,13 +131,10 @@ class Settings(BaseSettings):
     session: SessionSettings = SessionSettings()
     paths: PathSettings = PathSettings()
 
-    token_key: str = Field("", env="TOKEN_KEY")
-    
+    token_key:  str =   get("TOKEN_KEY", "secret")
     class Config:
-        
-        
         paths: PathSettings = PathSettings()
-        env_file =  paths.ENV_PATH(paths.ENV_DEVELOPMENT_FILE)
+        env_file = paths.ENV_PATH / paths.ENV_DEVELOPMENT_FILE
         env_file_encoding = "utf-8"
 
 settings = Settings()
