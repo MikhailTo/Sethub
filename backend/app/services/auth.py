@@ -1,12 +1,10 @@
-#TODO: install jose
-
 from datetime import datetime, timedelta
 
 
 from fastapi import Depends, status
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 
-from jose import jwt, JWTError
+from jwt import encode, decode, PyJWTError
 from sqlalchemy import select
 from passlib.context import CryptContext
 
@@ -75,7 +73,9 @@ class AuthService(HashingMixin, BaseService):
             "expires_at": self._expiration_time()
         }
         
-        return jwt.encode(payload, settings.token_key, algorithm=TOKEN_ALGORITHM)
+        return encode(payload=payload, 
+                      key=settings.token_key, 
+                      algorithm=TOKEN_ALGORITHM)
     
     @staticmethod
     def _expiration_time() -> str:
@@ -123,7 +123,9 @@ async def get_current_user(token: str = Depends(oauth2_schema)) -> UserSchema | 
 
     try:
         # decode token using secret token key provided by config
-        payload = jwt.decode(token, settings.token_key, algorithms=[TOKEN_ALGORITHM])
+        payload = decode(jwt=token, 
+                         key=settings.token_key, 
+                         algorithms=[TOKEN_ALGORITHM])
 
         # extract encoded information
         name: str = payload.get("name")
@@ -137,7 +139,7 @@ async def get_current_user(token: str = Depends(oauth2_schema)) -> UserSchema | 
             raise_with_log(status.HTTP_401_UNAUTHORIZED, "Token expired")
 
         return UserSchema(name=name, email=sub)
-    except JWTError:
+    except PyJWTError:
         raise_with_log(status.HTTP_401_UNAUTHORIZED, "Invalid credentials")
 
     return None
@@ -145,5 +147,5 @@ async def get_current_user(token: str = Depends(oauth2_schema)) -> UserSchema | 
 
 def is_expired(expires_at: str) -> bool:
     """Return :obj:`True` if token has expired."""
-
-    return datetime.strptime(expires_at, "%Y-%m-%d %H:%M:%S") < datetime.utcnow()
+    
+    return datetime.strptime(expires_at, "%Y-%m-%d %H:%M:%S") < datetime.now(datetime.UTC)
