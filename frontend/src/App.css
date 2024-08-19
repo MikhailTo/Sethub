@@ -1,0 +1,62 @@
+@font-face {
+  font-family: 'LilitaOne';
+  src: url('assets/fonts/LilitaOne-Regular.ttf');
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  background-color: #24292e;
+  color: white;
+  padding: 1rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+
+  background-color: #24292e;
+  padding: 4px 24px;
+  align-items: center;
+}
+
+.app-main {
+  flex: 1 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 60px; /* Adjust based on your header height */
+  margin: 0 auto;
+}
+
+.logo {
+  font-family: 'LilitaOne';
+  font-size: 24px;
+  font-weight: 600;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.logo:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+nav {
+  margin-left: 24px;
+}
+
+nav a {
+  color: #ffffff;
+  text-decoration: none;
+  margin-right: 16px;
+  font-size: 14px;
+}
+
+nav a:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
