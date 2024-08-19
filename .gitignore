@@ -10,3 +10,4 @@ htmlcov
 .env.dev
 db
 .vscode
+media
