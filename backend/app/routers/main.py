@@ -9,14 +9,14 @@ from app.services.posts import PostService
 from app.data.posts import Posts as local_posts
 from app.core.config import settings
 
+
+staticfiles = StaticFiles(directory=settings.paths.STATIC_PATH)
+templates = Jinja2Templates(directory=str(settings.paths.TEMPLATES_PATH))
+
 router = APIRouter()
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory=settings.paths.STATIC_PATH), name="static")
-templates = Jinja2Templates(directory=settings.paths.TEMPLATES_PATH)
-
-url_params = settings.db.params
-print(url_params)
+app.mount("/static", staticfiles, name="static")
 
 @router.get("/", response_class=HTMLResponse)
 async def homepage(

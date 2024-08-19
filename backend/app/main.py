@@ -7,6 +7,7 @@ from app.routers import main, auth, posts
 
 app = FastAPI(**app_params)
 
+
 app.include_router(main.router)
 app.include_router(posts.router)
 app.include_router(auth.router)
