@@ -117,3 +117,25 @@ class DatabaseSession():
             Database session.
         """
         return self.create_async_session()
+
+class SessionContextManager(DatabaseSession):
+    # https://ru.stackoverflow.com/questions/1584298/%D0%9A%D0%B0%D0%BA-%D1%81%D0%B4%D0%B5%D0%BB%D0%B0%D1%82%D1%8C-sqlalchemy-%D0%B0%D1%81%D0%B8%D0%BD%D1%85%D1%80%D0%BE%D0%BD%D0%BD%D1%8B%D0%B9-%D0%B3%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D1%82%D0%BE%D1%80-%D1%81%D0%B5%D1%81%D1%81%D0%B8%D0%B9
+    def __init__(self) -> None:
+        self.session_factory = self.__precreate_async_session()
+        self.session = None
+
+    async def __aenter__(self) -> None:
+        self.session = self.session_factory()
+
+    async def __aexit__(self, *args: object) -> None:
+        await self.rollback()
+
+    async def commit(self) -> None:
+        await self.session.commit()
+        await self.session.close()
+        self.session = None
+
+    async def rollback(self) -> None:
+        await self.session.rollback()
+        await self.session.close()
+        self.session = None
