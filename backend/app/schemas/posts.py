@@ -7,8 +7,8 @@ class PostSchema(BaseSchema):
     user_id: int
     title: str
     content: str
-    # created_at: datetime
-    # updated_at: datetime
+    created_at: datetime
+    updated_at: datetime
     title: str
     description: str
     enteries: list[str]

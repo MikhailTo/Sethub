@@ -24,15 +24,15 @@ class DatabaseSession():
     """
     A class to initialize and set up the database connection and ORM components.
     """
-    def __init__(self, settings: Any = settings) -> None:
+    def __init__(self, config: Any = settings) -> None:
         """
         Initialize the InitialDatabase instance.
         """
-        self.dsn_params = settings.db.params
+        self.dsn_params = config.db.params
 
-        self.engine_params = settings.engine.params
+        self.engine_params = config.engine.params
 
-        self.sessionmaker_params = settings.session.params
+        self.sessionmaker_params = config.session.params
 
 
     def __create_dsn(self, dsn_params: Dict[str, str]) -> URL:
@@ -112,7 +112,7 @@ class DatabaseSession():
     #     return self.create_async_session()
 
 class SessionContextManager():
-    
+
     def __init__(self) -> None:
         self.db_session = DatabaseSession(settings)
         self.session_factory = self.db_session.create_async_session_factory()
@@ -121,7 +121,7 @@ class SessionContextManager():
     async def __aenter__(self) -> 'SessionContextManager':
         self.session = self.session_factory()
         return self
-        
+
     async def __aexit__(self, *args: object) -> None:
         await self.rollback()
 
