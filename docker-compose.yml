@@ -1,7 +1,7 @@
 version: "3.8"
 services:
-  web:
-    container_name: web_sethub
+  backend:
+    container_name: backend_sethub
     build: 
       context: .
     depends_on:
@@ -12,10 +12,17 @@ services:
       - 8000:8000
     restart: always
     volumes:
-      - web_static_volume:/usr/src/sethub/frontend/static
+      - backend_static_volume:/usr/src/sethub/frontend/src/assets
     networks:
       - network
-
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    env_file:
+      - ./.env
   database:
     container_name: database_sethub
     image: postgres:16.1-alpine3.19
@@ -31,7 +38,7 @@ services:
 
 volumes:
   database_volume:
-  web_static_volume:
+  beckend_static_volume:
 
 
 networks:
