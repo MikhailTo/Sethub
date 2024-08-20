@@ -37,10 +37,15 @@
 - [SQL-Ex blog: Создание базы данных, используя Python и SQLAlchemy](https://sql-ex.ru/blogs/?/Sozdanie_bazy_dannyh,_ispolzuJa_Python_i_SQLAlchemy.html)
 - [Habr/introvertingCode: Создаем схему базы данных на SQLAlchemy](https://habr.com/ru/articles/541256/)
 - [NeverWalkAloner/secureblogs: FastAPI with async SQLAlchemy, alembic, celery and websockets](https://github.com/NeverWalkAloner/secureblogs)
-
+- [Конфигурация сопоставленных классов ORM](https://django.fun/docs/sqlalchemy/2.0/orm/mapper_config/#mapper-config-toplevel)
+- [Использование сеанса](https://django.fun/docs/sqlalchemy/2.0/orm/session/)
 #### Docker:
 - [Habr/mr-pickles: Практические рекомендации по работе с Docker для Python-разработчиков](https://habr.com/ru/companies/wunderfund/articles/586778/)
 
 
 ## Ссылки вспомогательные:
 - [Stackoverflow: Как сделать SQLAlchemy асинхронный генератор сессий?](https://ru.stackoverflow.com/questions/1584298/%D0%9A%D0%B0%D0%BA-%D1%81%D0%B4%D0%B5%D0%BB%D0%B0%D1%82%D1%8C-sqlalchemy-%D0%B0%D1%81%D0%B8%D0%BD%D1%85%D1%80%D0%BE%D0%BD%D0%BD%D1%8B%D0%B9-%D0%B3%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D1%82%D0%BE%D1%80-%D1%81%D0%B5%D1%81%D1%81%D0%B8%D0%B9)
+
+- [Context manager в рамках языка Python](https://habr.com/ru/companies/auriga/articles/724030/)
+- [Менеджер контекста это просто](https://habr.com/ru/articles/739326/)
+- [Полное руководство по модулю asyncio в Python. Часть 7](https://habr.com/ru/companies/wunderfund/articles/711012/)

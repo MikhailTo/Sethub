@@ -14,7 +14,6 @@ router = APIRouter(**auth_params)
 async def authenticate(
     login: OAuth2PasswordRequestForm = Depends(),
     session: AsyncSession = Depends(get_db_session)
-    # session: AsyncSession = Depends(DatabaseSession().create_async_session)
     ) -> TokenSchema | None:
     """User authentication.
 

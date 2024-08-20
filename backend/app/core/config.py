@@ -17,7 +17,7 @@ import urllib.parse
 from pydantic_settings import BaseSettings
 
 class DatabaseSettings(BaseSettings):
-    
+
     DIALECT:             str     =   get("DB_DIALECT", "postgresql")
     DRIVERNAME:          str     =   get("DB_DRIVERNAME", "asyncpg")
     USERNAME:            str     =   get("DB_USERNAME", "postgres")
@@ -25,6 +25,7 @@ class DatabaseSettings(BaseSettings):
     HOST:                str     =   get("DB_HOST", "localhost")
     PORT:                int     =   get("DB_PORT", "5432")
     NAME:                str     =   get("DB_NAME", "db_sethub")
+
     
     @property
     def params(self) -> Dict[str, str]:
@@ -63,7 +64,7 @@ class PathSettings(BaseSettings):
 
     ENV_PRODUCTION_FILE: Path = Path('.env')
     ENV_DEVELOPMENT_FILE: Path = Path('.env.dev')
-    ENV_TEST_FILE: Path = Path('.env.example')
+    ENV_TEST_FILE: Path = Path('.env.test')
 
     # Folder names
     BACKEND_FOLDER_NAME:    Path    =   Path('backend')
@@ -89,7 +90,7 @@ class Settings(BaseSettings):
     engine: EngineSettings = EngineSettings()
     session: SessionSettings = SessionSettings()
     paths: PathSettings = PathSettings()
-
+    
     token_key:  str =   get("TOKEN_KEY", "secret")
     class Config:
         paths: PathSettings = PathSettings()

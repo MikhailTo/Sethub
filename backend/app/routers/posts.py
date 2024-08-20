@@ -16,7 +16,6 @@ router = APIRouter(**post_params)
 async def get_post(
     post_id: int,
     user: UserSchema = Depends(get_current_user),
-    # session: AsyncSession = Depends(DatabaseSession().create_async_session)
     session: AsyncSession = Depends(get_db_session)
 ) -> PostSchema:
     return PostService(session).get_post(post_id)
@@ -25,7 +24,6 @@ async def get_post(
 async def get_posts(
     user: UserSchema = Depends(get_current_user),
     session: AsyncSession = Depends(get_db_session)
-    # session: AsyncSession = Depends(DatabaseSession().create_async_session)
 ) -> List[PostSchema]:
 
     return PostService(session).get_posts()

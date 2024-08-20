@@ -3,8 +3,8 @@ This module provides functionality for initializing and setting up database conn
 and ORM components using SQLAlchemy with asynchronous support.
 
 Note:
- - url_params
-https://docs.sqlalchemy.org/en/20/core/engines.html#sqlalchemy.engine.URL.create
+ - dsn_params
+https://docs.sqlalchemy.org/en/20/core/engines.html#sqlalchemy.engine.dsn.create
 
  - create_async_engine_params:
 https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#sqlalchemy.ext.asyncio.create_async_engine
@@ -28,28 +28,28 @@ class DatabaseSession():
         """
         Initialize the InitialDatabase instance.
         """
-        self.url_params = settings.db.params
+        self.dsn_params = settings.db.params
 
         self.engine_params = settings.engine.params
 
         self.sessionmaker_params = settings.session.params
 
 
-    def __create_url(self, url_params: Dict[str, str]) -> URL:
+    def __create_dsn(self, dsn_params: Dict[str, str]) -> URL:
         """
-        Create a SQLAlchemy URL object for database connection.
+        Create a SQLAlchemy dsn (data source name) object for database connection.
         """
-        url = URL.create(**url_params)
+        dsn = URL.create(**dsn_params)
         
-        return url
+        return dsn
 
 
-    def __create_async_engine(self, url: str,
+    def __create_async_engine(self, dsn: str,
                         engine_params: Dict[str, bool]) -> AsyncEngine:
         """
         Create an asynchronous SQLAlchemy engine.
         """
-        async_engine = create_async_engine(url, **engine_params)
+        async_engine = create_async_engine(dsn, **engine_params)
         
         return async_engine
     
@@ -70,9 +70,9 @@ class DatabaseSession():
         Create a configured session factory.
         """
 
-        url = self.__create_url(self.url_params)
+        dsn = self.__create_dsn(self.dsn_params)
 
-        async_engine = self.__create_async_engine(url, self.engine_params)
+        async_engine = self.__create_async_engine(dsn, self.engine_params)
 
         session_factory = self.__precreate_async_session_factory(async_engine, self.sessionmaker_params)
 
@@ -118,9 +118,10 @@ class SessionContextManager():
         self.session_factory = self.db_session.create_async_session_factory()
         self.session = None
 
-    async def __aenter__(self) -> None:
+    async def __aenter__(self) -> 'SessionContextManager':
         self.session = self.session_factory()
-
+        return self
+        
     async def __aexit__(self, *args: object) -> None:
         await self.rollback()
 
