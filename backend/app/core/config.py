@@ -67,22 +67,21 @@ class PathSettings(BaseSettings):
 
     # Folder names
     BACKEND_FOLDER_NAME:    Path    =   Path('backend')
-    FRONTEND_FOLDER_NAME:   Path    =   Path('frontend')
+    FRONTEND_FOLDER_NAME:   Path    =   Path('frontend/src')
     APP_FOLDER_NAME:        Path    =   Path('app')
     MEDIA_FOLDER_NAME:      Path    =   Path('media')
-    STATIC_FOLDER_NAME:     Path    =   Path('static')
-    TEMPLATES_FOLDER_NAME:  Path    =   Path('templates')
+    ASSETS_FOLDER_NAME:     Path    =   Path('assets')
+    # TEMPLATES_FOLDER_NAME:  Path    =   Path('templates')
 
     # Paths
     MAIN_PATH:              Path    =   Path(__file__).resolve().parents[3]
-    
     ENV_PATH:               Path    =   MAIN_PATH
     BACKEND_PATH:           Path    =   MAIN_PATH / BACKEND_FOLDER_NAME
     FRONTEND_PATH:          Path    =   MAIN_PATH / FRONTEND_FOLDER_NAME
     MEDIA_PATH:             Path    =   MAIN_PATH / MEDIA_FOLDER_NAME
     APP_PATH:               Path    =   BACKEND_PATH / APP_FOLDER_NAME
-    STATIC_PATH:            Path    =   FRONTEND_PATH / STATIC_FOLDER_NAME
-    TEMPLATES_PATH:         Path    =   FRONTEND_PATH / TEMPLATES_FOLDER_NAME
+    ASSETS_PATH:            Path    =   FRONTEND_PATH / ASSETS_FOLDER_NAME
+    # TEMPLATES_PATH:         Path    =   FRONTEND_PATH / TEMPLATES_FOLDER_NAME
 
 class Settings(BaseSettings):
 

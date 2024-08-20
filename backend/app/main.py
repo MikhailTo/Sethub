@@ -4,10 +4,11 @@ from fastapi.staticfiles import StaticFiles
 from app.const import app_params, uvicorn_params
 from app.routers import main, auth, posts
 from app.core.config import settings
-staticfiles = StaticFiles(directory=settings.paths.STATIC_PATH)
+
+assets = StaticFiles(directory=settings.paths.ASSETS_PATH)
 
 app = FastAPI(**app_params)
-app.mount("/static", staticfiles, name="static")
+app.mount("/assets", assets, name="assets")
 
 app.include_router(main.router)
 app.include_router(posts.router)
