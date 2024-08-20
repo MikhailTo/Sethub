@@ -40,3 +40,7 @@
 
 #### Docker:
 - [Habr/mr-pickles: Практические рекомендации по работе с Docker для Python-разработчиков](https://habr.com/ru/companies/wunderfund/articles/586778/)
+
+
+## Ссылки вспомогательные:
+- [Stackoverflow: Как сделать SQLAlchemy асинхронный генератор сессий?](https://ru.stackoverflow.com/questions/1584298/%D0%9A%D0%B0%D0%BA-%D1%81%D0%B4%D0%B5%D0%BB%D0%B0%D1%82%D1%8C-sqlalchemy-%D0%B0%D1%81%D0%B8%D0%BD%D1%85%D1%80%D0%BE%D0%BD%D0%BD%D1%8B%D0%B9-%D0%B3%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D1%82%D0%BE%D1%80-%D1%81%D0%B5%D1%81%D1%81%D0%B8%D0%B9)

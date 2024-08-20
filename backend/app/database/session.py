@@ -17,9 +17,9 @@ from contextlib import contextmanager
 from typing import Dict, Any, Iterator
 from sqlalchemy import URL
 from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine, async_sessionmaker, create_async_engine
-# from sqlalchemy.orm import sessionmaker
-
 from app.core.config import settings
+
+
 class DatabaseSession():
     """
     A class to initialize and set up the database connection and ORM components.
@@ -53,9 +53,9 @@ class DatabaseSession():
         
         return async_engine
     
-    def __create_async_session_factory(self, async_engine: AsyncEngine, sessionmaker_params: Dict[str, Any]) -> AsyncSession:
+    def __precreate_async_session_factory(self, async_engine: AsyncEngine, sessionmaker_params: Dict[str, Any]) -> AsyncSession:
         """
-        Create a configured session factory.
+        Precreate an asynchronous session for database operations.
         """
         async_session_factory = async_sessionmaker(
             **sessionmaker_params,
@@ -64,64 +64,58 @@ class DatabaseSession():
         )
         return async_session_factory
     
-
-    def __precreate_async_session(self) -> AsyncSession:
-
+    
+    def create_async_session_factory(self) -> AsyncSession:
         """
-            Precreate an asynchronous session for database operations.
-
-            This method creates a URL, an asynchronous engine, and an asynchronous session factory.
-            It then returns the created session.
-
-            Returns:
-            AsyncSession: An asynchronous session object ready for database operations.
+        Create a configured session factory.
         """
 
         url = self.__create_url(self.url_params)
 
         async_engine = self.__create_async_engine(url, self.engine_params)
 
-        session = self.__create_async_session_factory(async_engine, self.sessionmaker_params)
+        session_factory = self.__precreate_async_session_factory(async_engine, self.sessionmaker_params)
 
-        return session
+        return session_factory
         
-    def create_async_session(self) -> Iterator[AsyncSession]:
-        """
-        Create new database async session.
+    # def create_async_session(self) -> Iterator[AsyncSession]:
+    #     """
+    #     Create new database async session.
 
-        Yields:
-            Database session.
-        """
-        # This pattern ensures that database transactions are handled safely:
-        #   - Changes are committed only if everything succeeds
-        #   - Changes are rolled back if an error occurs
-        #   - The session is properly managed and cleaned up in all scenarios
-        session = self.__precreate_async_session()
+    #     Yields:
+    #         Database session.
+    #     """
+    #     # This pattern ensures that database transactions are handled safely:
+    #     #   - Changes are committed only if everything succeeds
+    #     #   - Changes are rolled back if an error occurs
+    #     #   - The session is properly managed and cleaned up in all scenarios
+    #     session = self.__precreate_async_session()
 
-        yield session
-        # try:
-        #     yield session
-        #     session.commit()
-        # except Exception:
-        #     session.rollback()
-        #     raise
-        # finally:
-        #     session.close()
+    #     yield session
+    #     # try:
+    #     #     yield session
+    #     #     session.commit()
+    #     # except Exception:
+    #     #     session.rollback()
+    #     #     raise
+    #     # finally:
+    #     #     session.close()
             
-    @contextmanager
-    def open_async_session(self) -> Iterator[AsyncEngine]:
-        """
-        Open database async session with context manager.
+    # @contextmanager
+    # def open_async_session(self) -> Iterator[AsyncEngine]:
+    #     """
+    #     Open database async session with context manager.
 
-        Yields:
-            Database session.
-        """
-        return self.create_async_session()
+    #     Yields:
+    #         Database session.
+    #     """
+    #     return self.create_async_session()
 
-class SessionContextManager(DatabaseSession):
-    # https://ru.stackoverflow.com/questions/1584298/%D0%9A%D0%B0%D0%BA-%D1%81%D0%B4%D0%B5%D0%BB%D0%B0%D1%82%D1%8C-sqlalchemy-%D0%B0%D1%81%D0%B8%D0%BD%D1%85%D1%80%D0%BE%D0%BD%D0%BD%D1%8B%D0%B9-%D0%B3%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D1%82%D0%BE%D1%80-%D1%81%D0%B5%D1%81%D1%81%D0%B8%D0%B9
+class SessionContextManager():
+    
     def __init__(self) -> None:
-        self.session_factory = self.__precreate_async_session()
+        self.db_session = DatabaseSession(settings)
+        self.session_factory = self.db_session.create_async_session_factory()
         self.session = None
 
     async def __aenter__(self) -> None:
@@ -139,3 +133,8 @@ class SessionContextManager(DatabaseSession):
         await self.session.rollback()
         await self.session.close()
         self.session = None
+
+
+async def get_db_session():
+    async with SessionContextManager() as session_manager:
+        yield session_manager.session
