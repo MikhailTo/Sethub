@@ -56,3 +56,50 @@ npm run dev```
 
 После запуска, ваше приложение будет доступно по адресу, указанному в конфигурации (обычно http://localhost:3000 для frontend и http://localhost:8000 для backend API).
 Не забудьте также настроить переменные окружения и базу данных согласно вашей конфигурации в backend/app/core/config.py.
+
+
+
+Создание базы:
+```
+CREATE SCHEMA IF NOT EXISTS sethub;
+
+CREATE TABLE IF NOT EXISTS sethub.posts (
+    post_id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    released INTEGER NOT NULL,
+    rating NUMERIC(2, 1) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS sethub.users (
+    user_id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    hashed_password TEXT NOT NULL,
+    UNIQUE(email)
+);
+
+# app/cli.py
+
+import click
+
+from app.backend.session import create_session
+from app.schemas.auth import CreateUserSchema
+from app.services.auth import AuthService
+
+
+@click.group()
+def main() -> None:
+    pass
+
+
+@main.command()
+@click.option("--name", type=str, help="User name")
+@click.option("--email", type=str, help="Email")
+@click.option("--password", type=str, help="Password")
+def create_user(name: str, email: str, password: str) -> None:
+    user = CreateUserSchema(name=name, email=email, password=password)
+    session = next(create_session())
+    AuthService(session).create_user(user)
+
+#$ myapi --name 'test user' --email test_user@myapi.com --password password
+```

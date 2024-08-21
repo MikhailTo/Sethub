@@ -9,10 +9,10 @@ from app.services.base import BaseService, BaseDataManager
 class PostService(BaseService):
     def get_post(self, post_id: int) -> PostSchema:
         return PostDataManager(self.session).get_post(post_id)
-    
+
     def get_posts(self) -> List[PostSchema]:
         return PostDataManager(self.session).get_posts()
-    
+
 class PostDataManager(BaseDataManager):
     def get_post(self, post_id: int) -> PostSchema:
         statement = select(PostModel).where(PostModel.id == post_id)
