@@ -10,21 +10,21 @@ Usage:
 Note:
     Ensure that sensitive information is properly secured and not exposed in the codebase.
 '''
-from os import getenv as get
 from typing import Dict
 from pathlib import Path
 import urllib.parse
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import SecretStr
 
 class DatabaseSettings(BaseSettings):
 
-    DIALECT:             str     =   get("DB_DIALECT", "postgresql")
-    DRIVERNAME:          str     =   get("DB_DRIVERNAME", "asyncpg")
-    USERNAME:            str     =   get("DB_USERNAME", "postgres")
-    PASSWORD:            str     =   get("DB_PASSWORD", "postgres")
-    HOST:                str     =   get("DB_HOST", "localhost")
-    PORT:                int     =   get("DB_PORT", "5432")
-    NAME:                str     =   get("DB_NAME", "db_sethub")
+    DIALECT:             str
+    DRIVERNAME:          str
+    USERNAME:            str
+    PASSWORD:            SecretStr
+    HOST:                str
+    PORT:                int    
+    NAME:                str
 
     
     @property
@@ -72,7 +72,8 @@ class PathSettings(BaseSettings):
     APP_FOLDER_NAME:        Path    =   Path('app')
     MEDIA_FOLDER_NAME:      Path    =   Path('media')
     ASSETS_FOLDER_NAME:     Path    =   Path('assets')
-    # TEMPLATES_FOLDER_NAME:  Path    =   Path('templates')
+    STATIC_FOLDER_NAME:     Path    =   Path('static')
+    TEMPLATES_FOLDER_NAME:  Path    =   Path('templates')
 
     # Paths
     MAIN_PATH:              Path    =   Path(__file__).resolve().parents[3]
@@ -82,7 +83,8 @@ class PathSettings(BaseSettings):
     MEDIA_PATH:             Path    =   MAIN_PATH / MEDIA_FOLDER_NAME
     APP_PATH:               Path    =   BACKEND_PATH / APP_FOLDER_NAME
     ASSETS_PATH:            Path    =   FRONTEND_PATH / ASSETS_FOLDER_NAME
-    # TEMPLATES_PATH:         Path    =   FRONTEND_PATH / TEMPLATES_FOLDER_NAME
+    STATIC_PATH:            Path    =   BACKEND_PATH / STATIC_FOLDER_NAME
+    TEMPLATES_PATH:         Path    =   BACKEND_PATH / TEMPLATES_FOLDER_NAME
 
 class Settings(BaseSettings):
 
@@ -90,11 +92,14 @@ class Settings(BaseSettings):
     engine: EngineSettings = EngineSettings()
     session: SessionSettings = SessionSettings()
     paths: PathSettings = PathSettings()
-    
-    token_key:  str =   get("TOKEN_KEY", "secret")
-    class Config:
-        paths: PathSettings = PathSettings()
-        env_file = paths.ENV_PATH / paths.ENV_DEVELOPMENT_FILE
-        env_file_encoding = "utf-8"
+
+    token_key:  SecretStr
+
+    model_config = SettingsConfigDict(      
+        env_file="../.env",
+        env_file_encoding="utf-8",
+        env_nested_delimiter="__",
+    )
+
 
 settings = Settings()

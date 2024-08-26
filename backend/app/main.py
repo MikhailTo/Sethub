@@ -5,10 +5,13 @@ from app.const import app_params, uvicorn_params
 from app.routers import main, auth, posts
 from app.core.config import settings
 
-assets = StaticFiles(directory=settings.paths.ASSETS_PATH)
+#assets = StaticFiles(directory=settings.paths.ASSETS_PATH)
+static = StaticFiles(directory=settings.paths.STATIC_PATH)
 
 app = FastAPI(**app_params)
-app.mount("/assets", assets, name="assets")
+
+#app.mount("/assets", assets, name="assets")
+app.mount("/static", static, name="static")
 
 app.include_router(main.router)
 app.include_router(posts.router)
