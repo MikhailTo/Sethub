@@ -23,16 +23,16 @@ class DatabaseSettings(BaseSettings):
     USERNAME:            str
     PASSWORD:            SecretStr
     HOST:                str
-    PORT:                int    
+    PORT:                int
     NAME:                str
 
-    
+
     @property
     def params(self) -> Dict[str, str]:
         return {
             "drivername": f"{self.DIALECT}+{self.DRIVERNAME}",
             "username": self.USERNAME,
-            "password": urllib.parse.quote_plus(self.PASSWORD),
+            "password": urllib.parse.quote_plus(self.PASSWORD.get_secret_value()),
             "host": self.HOST,
             "port": self.PORT,
             "database": self.NAME

@@ -74,7 +74,7 @@ class AuthService(HashingMixin, BaseService):
         }
         
         return encode(payload=payload,
-                      key=settings.token_key,
+                      key=settings.token_key.get_secret_value(),
                       algorithm=TOKEN_ALGORITHM)
     
     @staticmethod
@@ -124,7 +124,7 @@ async def get_current_user(token: str = Depends(oauth2_schema)) -> UserSchema | 
     try:
         # decode token using secret token key provided by config
         payload = decode(jwt=token,
-                         key=settings.token_key,
+                         key=settings.token_key.get_secret_value(),
                          algorithms=[TOKEN_ALGORITHM])
 
         # extract encoded information
